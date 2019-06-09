@@ -1,0 +1,15 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>SvgDiagram DIAGRAM</title>
+		<script src='svgdiagram.js'></script>
+	</head>
+	<body style="overflow:hidden">
+		<div id="svgcontainer" style="border:10px chocolate solid; height:calc(100vh - 36px - 10px - 10px - 1px); width:calc((100vw - 20px) - 10px - 10px);"></div>
+	</body>
+</html>
+<script>
+drawDiagram("svgcontainer",  "Hello world :)", function (draw) {
+	draw("Hello world!").move(10,10);
+});
+</script>
