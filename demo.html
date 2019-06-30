@@ -10,4 +10,116 @@
 	addCase("Hello world", function (draw) {
 		draw("Hello world!").move(10,10);
 	});
+	
+	addCase("relative position (cardinial directions 1)", function (draw) {
+		let helloWorld = draw("Hello world!").move(300, 250),
+			north = draw("north").north(),
+			east = draw("east").east(helloWorld),
+			south = draw("south").south(helloWorld),
+			west = draw("west").west(helloWorld);
+			
+		let north2 = draw("north2").north(helloWorld, 200),
+			east2 = draw("east2").east(helloWorld, 200),
+			south2 = draw("south2").south(helloWorld, 200),
+			west2 = draw("west2").west(helloWorld, 200);
+			
+		let shortVersion = draw("Short version!").move(700, 350),
+			n = draw("n").n(),
+			e = draw("e").e(shortVersion),
+			s = draw("s").s(shortVersion),
+			w = draw("w").w(shortVersion);
+			
+		let n2 = draw("n2").n(shortVersion, 200),
+			e2 = draw("e2").e(shortVersion, 200),
+			s2 = draw("s2").s(shortVersion, 200),
+			w2 = draw("w2").w(shortVersion, 200);
+	});
+	
+	addCase("relative position (cardinial directions 2)", function (draw) {
+		let helloWorld = draw("Hello world!").move(200, 250),
+			northEast = draw("northEast").northEast(helloWorld),
+			northWest = draw("northWest").northWest(helloWorld),
+			southEast = draw("southEast").southEast(helloWorld),
+			southWest = draw("southWest").southWest(helloWorld);
+			
+		let northEast2 = draw("northEast2").northEast(helloWorld, 200),
+			northWest2 = draw("northWest2").northWest(helloWorld, 200),
+			southEast2 = draw("southEast2").southEast(helloWorld, 200),
+			southWest2 = draw("southWest2").southWest(helloWorld, 200);
+			
+		let shortVersion = draw("Short version!").move(700, 250),
+			ne = draw("ne").ne(shortVersion),
+			nw = draw("nw").nw(shortVersion),
+			se = draw("se").se(shortVersion),
+			sw = draw("sw").sw(shortVersion);
+			
+		let ne2 = draw("ne2").ne(shortVersion, 200),
+			nw2 = draw("nw2").nw(shortVersion, 200),
+			se2 = draw("se2").se(shortVersion, 200),
+			sw2 = draw("sw2").sw(shortVersion, 200);
+	});
+	
+	addCase("relative position (cartesian coordinates)", function (draw) {
+		let helloWorld = draw("Hello world!").move(400, 150),
+			cartesianNorth_distanceFromAndToEdge = draw("cartesianNorth(distance from & to edge)").cx(helloWorld.cx()).y2(helloWorld.y() - 100),
+			cartesianEast_distanceFromAndToEdge = draw("cartesianEast(distance from & to edge)").x(helloWorld.x2() + 100).cy(helloWorld.cy()),
+			cartesianWest_distanceFromAndToEdge = draw("cartesianWest(distance from & to edge)").x2(helloWorld.x() - 100).cy(helloWorld.cy()),
+			cartesianSouth_distanceFromAndToEdge = draw("cartesianSouth(distance from & to edge)").cx(helloWorld.cx()).y(helloWorld.y2() + 100);
+			
+		let helloWorld2 = draw("Hello world 2 !").move(400, 450),
+			cartesianNorth_distanceFromAndToCenter = draw("cartesianNorth(distance from & to centers)").cx(helloWorld2.cx()).cy(helloWorld2.cy() - 100),
+			cartesianEast_distanceFromAndToCenter = draw("cartesianEast(distance from & to centers)").cx(helloWorld2.cx() + 300).cy(helloWorld2.cy()),
+			cartesianWest_distanceFromAndToCenter = draw("cartesianWest(distance from & to centers)").cx(helloWorld2.cx() - 300).cy(helloWorld2.cy()),
+			cartesianSouth_distanceFromAndToCenter = draw("cartesianSouth(distance from & to centers)").cx(helloWorld2.cx()).cy(helloWorld2.cy() + 100);
+	});
+	
+	addCase("relative position (polar coordinates)", function (draw) {
+		let helloWorld = draw("Hello world!").move(200, 200),
+			polarNorth = draw("polar(r:200, theta:-90°)").polar(helloWorld, -90, 200),
+			polarEast = draw("polar(r:200, theta:0°)").polar(helloWorld, 0, 200),
+			polarSouthWest = draw("polar(r:200, theta:135°)").polar(helloWorld, 135, 200),
+			polarNorthWest = draw("polar(r:200, theta:-135°)").polar(helloWorld, -135, 200);
+
+		let shortVersion = draw("Short version!").move(700, 400),
+			pNorth = draw("p(r:200, theta:-90°)").p(shortVersion, -90, 200),
+			pEast = draw("p(r:200, theta:0°)").p(shortVersion, 0, 200),
+			pSouthWest = draw("p(r:200, theta:135°)").p(shortVersion, 135, 200),
+			pNorthWest = draw("p(r:200, theta:-135°)").p(shortVersion, -135, 200);
+	});
+	
+	addCase("relative to last drawn by default", function (draw) {
+		draw("Hello").move(10,10);
+		draw("world").e();
+		draw("!").e();
+		draw("I").s();
+		draw("am").s();
+		draw("svgdiagram").s();
+		draw("Nice").e();
+		draw("to").s();
+		draw("meet").e();
+		draw("you").e();
+		draw(":)").n();
+	});
+	
+	addCase("position between other nodes", function (draw) {
+		let hello = draw("Hello").move(10,10),
+			exclamationMark = draw("!").e(500),
+			world =  draw("world").between(hello, exclamationMark);
+		
+		let i = draw("I").move(10,100),
+			svgdiagram = draw("svgdiagram").e(500),
+			am =  draw("am").between(i, svgdiagram, 1/4);
+			
+		let nice = draw("Nice").move(10,200),
+			you = draw("you").se(),
+			toMeet =  draw("to meet").between(nice, you);
+			
+		let X1 = draw("X1").move(10,400),
+			X2 = draw("X2").se(),
+			x =  draw("x").bx(X1, X2);
+			
+		let Y1 = draw("Y1").move(200,400),
+			Y2 = draw("Y2").se(),
+			y =  draw("y").by(Y1, Y2);
+	});
 </script>

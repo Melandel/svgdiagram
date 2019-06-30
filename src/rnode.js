@@ -14,6 +14,7 @@ SVG.RNode = SVG.invent({
 			rnode: function (text) {
 				let rnode = this.put(new SVG.RNode(text));
 
+				this.doc().lastShape(rnode);
 				return rnode;
 			}
 		}

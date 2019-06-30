@@ -10,6 +10,14 @@
 </html>
 <script>
 drawDiagram("svgcontainer",  "Hello world :)", function (draw) {
-	draw("Hello world!").move(10,10);
+	let helloWorld = draw("Hello world!").move(400, 400),
+		north = draw("north").n(),
+		north2 = draw("north2").n(helloWorld, 200),
+		east = draw("east").e(helloWorld),
+		east2 = draw("east2").e(helloWorld, 200),
+		south = draw("south").s(helloWorld),
+		south2 = draw("south2").s(helloWorld, 200),
+		west = draw("west").w(helloWorld),
+		west2 = draw("west2").w(helloWorld, 200);
 });
 </script>

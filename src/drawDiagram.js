@@ -28,7 +28,6 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	};
 	
 	drawContent(drawingTool);
-	
 	// svg.drawTitle(title);
 	return svg;
 }
