@@ -8,8 +8,17 @@ SVG.RNode = SVG.invent({
 			content.cx(background.cx()).cy(background.cy());
 
 			background.back();
+			
+			this.background = background;
+			this.content = content;
 		},
 		inherit: SVG.Nested,
+		extend: {
+			fill: function (arg) {
+				this.background.fill(arg);
+				return this;
+			}
+		},
 		construct: {
 			rnode: function (text) {
 				let rnode = this.put(new SVG.RNode(text));

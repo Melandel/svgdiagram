@@ -1,5 +1,8 @@
 let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	let svg = SVG(domContainerID);
+	window.svg = svg;
+	window.isFirstNode = true;
+	window.refFontSize = window.getComputedStyle(document.body).fontSize;
 	
 	let drawingTool = function(...args) {
 		/* NODES // depth:4
@@ -24,7 +27,14 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 		*/
 		
 		// Dummy implementation
-		return svg.rnode(args[0]);
+		let drawn =  svg.rnode(args[0]);
+		
+		if (window.isFirstNode) {
+			drawn.fill("orange");
+			window.isFirstNode = false;
+		}
+		
+		return drawn;
 	};
 	
 	drawContent(drawingTool);

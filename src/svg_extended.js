@@ -23,6 +23,57 @@ SVG.extend(SVG.Text, SVG.Nested, {
 	}
 })
 
+SVG.extend(SVG.Nested, {
+	chain: function (...args) {
+		let defaultChainConfig = {
+				chain: "followThrough"
+			},
+			isFirstArgANode = (args[0] instanceof SVG.Nested),
+			chainConfigOverride = isFirstArgANode ? {}
+												  : args[0];
+		let chainConfig = {};
+		for (let prop in defaultChainConfig)
+			chainConfig[prop] = defaultChainConfig[prop];
+		for (let prop in chainConfigOverride)
+			chainConfig[prop] = chainConfigOverride[prop];
+		
+		let isFollowThroughChain = chainConfig.chain == "followThrough",
+			i = isFirstArgANode ? 0 : 1,
+			linkFrom = this,
+			doc = this.doc();
+			
+		while (i < args.length) {
+			let linkTo = args[i],
+				nextArg = args[i+1];
+
+			let isNextArgANode = (nextArg instanceof SVG.Nested),
+				linkConfigOverride;
+			
+			if (!nextArg || isNextArgANode)
+				linkConfigOverride = {};
+			else if (typeof nextArg == "string")
+				linkConfigOverride = { caption: nextArg };
+			else
+				linkConfigOverride = nextArg;
+			
+			let linkConfig = {};
+			for (let prop in chainConfig)
+				linkConfig[prop] = chainConfig[prop];
+			for (let prop in linkConfigOverride)
+				linkConfig[prop] = linkConfigOverride[prop];
+			
+			doc.arrow(linkFrom, linkTo, linkConfig);
+			
+			if (isFollowThroughChain)
+				linkFrom = linkTo;
+			
+			i += (isNextArgANode ? 1 : 2);
+		}
+		
+		return this;
+	}
+})
+
 SVG.extend(SVG.Doc, {
 	lastShape: function(shape){
 		if (!this._lastShapes)
