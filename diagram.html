@@ -2,7 +2,7 @@
 	<head>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<title>SvgDiagram DIAGRAM</title>
-		<script src='svgdiagram.js'></script>
+		<script type="text/javascript" src='https://melandel.github.io/svgdiagram/svgdiagram.js'></script>
 	</head>
 	<body style="overflow:hidden">
 		<div id="svgcontainer" style="border:10px chocolate solid; height:calc(100vh - 36px - 10px - 10px - 1px); width:calc((100vw - 20px) - 10px - 10px);"></div>
@@ -10,14 +10,42 @@
 </html>
 <script>
 drawDiagram("svgcontainer",  "Hello world :)", function (draw) {
-	let helloWorld = draw("Hello world!").move(400, 400),
-		north = draw("north").n(),
-		north2 = draw("north2").n(helloWorld, 200),
-		east = draw("east").e(helloWorld),
-		east2 = draw("east2").e(helloWorld, 200),
-		south = draw("south").s(helloWorld),
-		south2 = draw("south2").s(helloWorld, 200),
-		west = draw("west").w(helloWorld),
-		west2 = draw("west2").w(helloWorld, 200);
+	let helloWorld = draw("Hello world!").move(300, 250),
+		north = draw("north").north(),
+		east = draw("east").east(helloWorld),
+		south = draw("south").south(helloWorld),
+		west = draw("west").west(helloWorld),
+		
+		north2 = draw("north2").north(helloWorld, 200),
+		east2 = draw("east2").east(helloWorld, 200),
+		south2 = draw("south2").south(helloWorld, 200),
+		west2 = draw("west2").west(helloWorld, 200);
+		
+	helloWorld.chain(
+		{chain: "oneToMany"},
+		north.chain(north2),
+		east.chain(east2),
+		south.chain(south2),
+		west.chain(west2)
+	);
+		
+	let shortVersion = draw("Short version!").move(700, 350).fill("orange"),
+		n = draw("n").n(),
+		e = draw("e").e(shortVersion),
+		s = draw("s").s(shortVersion),
+		w = draw("w").w(shortVersion),
+		
+		n2 = draw("n2").n(shortVersion, 200),
+		e2 = draw("e2").e(shortVersion, 200),
+		s2 = draw("s2").s(shortVersion, 200),
+		w2 = draw("w2").w(shortVersion, 200);
+		
+	shortVersion.chain(
+		{chain: "oneToMany"},
+		n.chain(n2),
+		e.chain(e2),
+		s.chain(s2),
+		w.chain(w2)
+	);
 });
 </script>
