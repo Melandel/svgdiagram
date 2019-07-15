@@ -5646,37 +5646,70 @@ SVG.extend(SVG.Nested, {
 		for (let prop in chainConfigOverride)
 			chainConfig[prop] = chainConfigOverride[prop];
 		
-		let isFollowThroughChain = chainConfig.chain == "followThrough",
-			i = isFirstArgANode ? 0 : 1,
-			linkFrom = this,
+		
+		let i = isFirstArgANode ? 0 : 1,
+			linkFrom,
+			linkTo,
 			doc = this.doc();
-			
-		while (i < args.length) {
-			let linkTo = args[i],
-				nextArg = args[i+1];
-
-			let isNextArgANode = (nextArg instanceof SVG.Nested),
-				linkConfigOverride;
-			
-			if (!nextArg || isNextArgANode)
-				linkConfigOverride = {};
-			else if (typeof nextArg == "string")
-				linkConfigOverride = { caption: nextArg };
-			else
-				linkConfigOverride = nextArg;
-			
-			let linkConfig = {};
-			for (let prop in chainConfig)
-				linkConfig[prop] = chainConfig[prop];
-			for (let prop in linkConfigOverride)
-				linkConfig[prop] = linkConfigOverride[prop];
-			
-			doc.arrow(linkFrom, linkTo, linkConfig);
-			
-			if (isFollowThroughChain)
-				linkFrom = linkTo;
-			
-			i += (isNextArgANode ? 1 : 2);
+		switch (chainConfig.chain) {
+			case "manyToOne":
+				linkTo = this;
+				while (i < args.length) {
+					linkFrom = args[i];
+					let nextArg = args[i+1],
+						isNextArgANode = (nextArg instanceof SVG.Nested),
+						linkConfigOverride;
+					
+					if (!nextArg || isNextArgANode)
+						linkConfigOverride = {};
+					else if (typeof nextArg == "string")
+						linkConfigOverride = { caption: nextArg };
+					else
+						linkConfigOverride = nextArg;
+					
+					let linkConfig = {};
+					for (let prop in chainConfig)
+						linkConfig[prop] = chainConfig[prop];
+					for (let prop in linkConfigOverride)
+						linkConfig[prop] = linkConfigOverride[prop];
+					
+					doc.arrow(linkFrom, linkTo, linkConfig);
+					
+					i += (isNextArgANode ? 1 : 2);
+				}
+				break;
+				
+			case "oneToMany":
+			case "followThrough":
+			default:
+				linkFrom = this;
+				while (i < args.length) {
+					linkTo = args[i];
+					let nextArg = args[i+1],
+						isNextArgANode = (nextArg instanceof SVG.Nested),
+						linkConfigOverride;
+					
+					if (!nextArg || isNextArgANode)
+						linkConfigOverride = {};
+					else if (typeof nextArg == "string")
+						linkConfigOverride = { caption: nextArg };
+					else
+						linkConfigOverride = nextArg;
+					
+					let linkConfig = {};
+					for (let prop in chainConfig)
+						linkConfig[prop] = chainConfig[prop];
+					for (let prop in linkConfigOverride)
+						linkConfig[prop] = linkConfigOverride[prop];
+					
+					doc.arrow(linkFrom, linkTo, linkConfig);
+					
+					if (chainConfig.chain == "followThrough")
+						linkFrom = linkTo;
+					
+					i += (isNextArgANode ? 1 : 2);
+				}
+				break;
 		}
 		
 		return this;
@@ -5768,18 +5801,53 @@ SVG.extend(SVG.Element, {
 
 
 SVG.RNode = SVG.invent({
-		create: function (text) {
+		create: function (...cells) {
 			SVG.Nested.call(this);
-			this.id(text);
-
-			let content = this.text(text).id(text + "_content");
-			let background = this.rect(content.width() + 10, content.height() + 4).fill("lightgreen").id(text + "_background");
-			content.cx(background.cx()).cy(background.cy());
-
-			background.back();
 			
+			let titleText = cells[0];
+			this.id(titleText);
+			
+			let nbCells = cells.length,
+				textNodeTitleSizeFont = parseInt(window.refFontSize),
+				textNodeNormalTextSizeFont = 0.9 * parseInt(window.refFontSize),
+				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).font('size', textNodeNormalTextSizeFont)),
+				vMargin = 10;
+
+			let title = textNodes[0].font('size', textNodeTitleSizeFont);
+			this[0] = title; // use like an array
+			
+			let maxTextNodeWidth = Math.max(...textNodes.map(x => x.width())),
+				hMargin = 10,
+				backgroundWidth = hMargin + maxTextNodeWidth + hMargin;
+			title.y(0.8 * vMargin).cx(backgroundWidth / 2);
+
+			let backgroundHeight;
+			if (nbCells === 1)
+				backgroundHeight = title.y2() + vMargin;
+			else {
+				let currentSeparatorY = title.y2() + 0.5 * vMargin,
+					y_separator,
+					separator, 
+					textNode;
+				
+				for (let i = 1; i < nbCells; i++) {
+					separator = this.line(0, currentSeparatorY, backgroundWidth, currentSeparatorY).id("separator").stroke({ width: 1});
+					textNode = textNodes[i].x(hMargin).y(separator.y2() + vMargin);
+					this[i] = textNode; // use like an array
+
+					currentSeparatorY = textNode.y2() + vMargin;
+				}
+				
+				backgroundHeight = currentSeparatorY;
+			}
+			
+			let background = this.rect(backgroundWidth, backgroundHeight)
+				.fill("lightgreen")
+				.id(titleText + "_background")
+				.stroke({ width: 1})
+				.back();
 			this.background = background;
-			this.content = content;
+			this.title = title;
 		},
 		inherit: SVG.Nested,
 		extend: {
@@ -5789,8 +5857,8 @@ SVG.RNode = SVG.invent({
 			}
 		},
 		construct: {
-			rnode: function (text) {
-				let rnode = this.put(new SVG.RNode(text));
+			rnode: function (...cells) {
+				let rnode = this.put(new SVG.RNode(...cells));
 
 				this.doc().lastShape(rnode);
 				return rnode;
@@ -6090,7 +6158,7 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 		*/
 		
 		// Dummy implementation
-		let drawn =  svg.rnode(args[0]);
+		let drawn =  svg.rnode(...args);
 		
 		if (window.isFirstNode) {
 			drawn.fill("orange");

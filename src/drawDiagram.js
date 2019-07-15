@@ -27,7 +27,7 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 		*/
 		
 		// Dummy implementation
-		let drawn =  svg.rnode(args[0]);
+		let drawn =  svg.rnode(...args);
 		
 		if (window.isFirstNode) {
 			drawn.fill("orange");

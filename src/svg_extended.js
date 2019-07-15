@@ -37,37 +37,70 @@ SVG.extend(SVG.Nested, {
 		for (let prop in chainConfigOverride)
 			chainConfig[prop] = chainConfigOverride[prop];
 		
-		let isFollowThroughChain = chainConfig.chain == "followThrough",
-			i = isFirstArgANode ? 0 : 1,
-			linkFrom = this,
+		
+		let i = isFirstArgANode ? 0 : 1,
+			linkFrom,
+			linkTo,
 			doc = this.doc();
-			
-		while (i < args.length) {
-			let linkTo = args[i],
-				nextArg = args[i+1];
-
-			let isNextArgANode = (nextArg instanceof SVG.Nested),
-				linkConfigOverride;
-			
-			if (!nextArg || isNextArgANode)
-				linkConfigOverride = {};
-			else if (typeof nextArg == "string")
-				linkConfigOverride = { caption: nextArg };
-			else
-				linkConfigOverride = nextArg;
-			
-			let linkConfig = {};
-			for (let prop in chainConfig)
-				linkConfig[prop] = chainConfig[prop];
-			for (let prop in linkConfigOverride)
-				linkConfig[prop] = linkConfigOverride[prop];
-			
-			doc.arrow(linkFrom, linkTo, linkConfig);
-			
-			if (isFollowThroughChain)
-				linkFrom = linkTo;
-			
-			i += (isNextArgANode ? 1 : 2);
+		switch (chainConfig.chain) {
+			case "manyToOne":
+				linkTo = this;
+				while (i < args.length) {
+					linkFrom = args[i];
+					let nextArg = args[i+1],
+						isNextArgANode = (nextArg instanceof SVG.Nested),
+						linkConfigOverride;
+					
+					if (!nextArg || isNextArgANode)
+						linkConfigOverride = {};
+					else if (typeof nextArg == "string")
+						linkConfigOverride = { caption: nextArg };
+					else
+						linkConfigOverride = nextArg;
+					
+					let linkConfig = {};
+					for (let prop in chainConfig)
+						linkConfig[prop] = chainConfig[prop];
+					for (let prop in linkConfigOverride)
+						linkConfig[prop] = linkConfigOverride[prop];
+					
+					doc.arrow(linkFrom, linkTo, linkConfig);
+					
+					i += (isNextArgANode ? 1 : 2);
+				}
+				break;
+				
+			case "oneToMany":
+			case "followThrough":
+			default:
+				linkFrom = this;
+				while (i < args.length) {
+					linkTo = args[i];
+					let nextArg = args[i+1],
+						isNextArgANode = (nextArg instanceof SVG.Nested),
+						linkConfigOverride;
+					
+					if (!nextArg || isNextArgANode)
+						linkConfigOverride = {};
+					else if (typeof nextArg == "string")
+						linkConfigOverride = { caption: nextArg };
+					else
+						linkConfigOverride = nextArg;
+					
+					let linkConfig = {};
+					for (let prop in chainConfig)
+						linkConfig[prop] = chainConfig[prop];
+					for (let prop in linkConfigOverride)
+						linkConfig[prop] = linkConfigOverride[prop];
+					
+					doc.arrow(linkFrom, linkTo, linkConfig);
+					
+					if (chainConfig.chain == "followThrough")
+						linkFrom = linkTo;
+					
+					i += (isNextArgANode ? 1 : 2);
+				}
+				break;
 		}
 		
 		return this;

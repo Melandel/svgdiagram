@@ -1,16 +1,51 @@
 SVG.RNode = SVG.invent({
-		create: function (text) {
+		create: function (...cells) {
 			SVG.Nested.call(this);
-			this.id(text);
-
-			let content = this.text(text).id(text + "_content");
-			let background = this.rect(content.width() + 10, content.height() + 4).fill("lightgreen").id(text + "_background");
-			content.cx(background.cx()).cy(background.cy());
-
-			background.back();
 			
+			let titleText = cells[0];
+			this.id(titleText);
+			
+			let nbCells = cells.length,
+				textNodeTitleSizeFont = parseInt(window.refFontSize),
+				textNodeNormalTextSizeFont = 0.9 * parseInt(window.refFontSize),
+				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).font('size', textNodeNormalTextSizeFont)),
+				vMargin = 10;
+
+			let title = textNodes[0].font('size', textNodeTitleSizeFont);
+			this[0] = title; // use like an array
+			
+			let maxTextNodeWidth = Math.max(...textNodes.map(x => x.width())),
+				hMargin = 10,
+				backgroundWidth = hMargin + maxTextNodeWidth + hMargin;
+			title.y(0.8 * vMargin).cx(backgroundWidth / 2);
+
+			let backgroundHeight;
+			if (nbCells === 1)
+				backgroundHeight = title.y2() + vMargin;
+			else {
+				let currentSeparatorY = title.y2() + 0.5 * vMargin,
+					y_separator,
+					separator, 
+					textNode;
+				
+				for (let i = 1; i < nbCells; i++) {
+					separator = this.line(0, currentSeparatorY, backgroundWidth, currentSeparatorY).id("separator").stroke({ width: 1});
+					textNode = textNodes[i].x(hMargin).y(separator.y2() + vMargin);
+					this[i] = textNode; // use like an array
+
+					currentSeparatorY = textNode.y2() + vMargin;
+				}
+				
+				backgroundHeight = currentSeparatorY;
+			}
+			
+			let background = this.rect(backgroundWidth, backgroundHeight)
+				.fill("lightgreen")
+				.id(titleText + "_background")
+				.stroke({ width: 1})
+				.back();
 			this.background = background;
-			this.content = content;
+			this.title = title;
 		},
 		inherit: SVG.Nested,
 		extend: {
@@ -20,8 +55,8 @@ SVG.RNode = SVG.invent({
 			}
 		},
 		construct: {
-			rnode: function (text) {
-				let rnode = this.put(new SVG.RNode(text));
+			rnode: function (...cells) {
+				let rnode = this.put(new SVG.RNode(...cells));
 
 				this.doc().lastShape(rnode);
 				return rnode;

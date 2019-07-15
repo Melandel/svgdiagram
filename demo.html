@@ -12,16 +12,16 @@
 	});
 	
 	addCase("relative position (cardinial directions 1)", function (draw) {
-		let helloWorld = draw("Hello world!").move(300, 250),
-			north = draw("north").north(),
-			east = draw("east").east(helloWorld),
-			south = draw("south").south(helloWorld),
-			west = draw("west").west(helloWorld),
+		let helloWorld = draw("Hello world!").move(320, 275),
+			north = draw("north", ".north() | .north(100) | .n() | .n(100)").north(),
+			east = draw("east", ".east()", ".east(100)", ".e()", ".e(100)").east(helloWorld),
+			south = draw("south", ".south() | .south(100) | .s() | .s(100)").south(helloWorld),
+			west = draw("west", ".west()", ".west(100)", ".w()", ".w(100)").west(helloWorld),
 			
-			north2 = draw("north2").north(helloWorld, 200),
-			east2 = draw("east2").east(helloWorld, 200),
-			south2 = draw("south2").south(helloWorld, 200),
-			west2 = draw("west2").west(helloWorld, 200);
+			north2 = draw("north2", ".north(200) | .n(200)").north(helloWorld, 200),
+			east2 = draw("east2", ".east(200)", ".e(200)").east(helloWorld, 200),
+			south2 = draw("south2", ".south(200) | .s(200)").south(helloWorld, 200),
+			west2 = draw("west2", ".west(200)", ".w(200)").west(helloWorld, 200);
 			
 		helloWorld.chain(
 			{chain: "oneToMany"},
@@ -30,38 +30,19 @@
 			south.chain(south2),
 			west.chain(west2)
 		);
-			
-		let shortVersion = draw("Short version!").move(700, 350).fill("orange"),
-			n = draw("n").n(),
-			e = draw("e").e(shortVersion),
-			s = draw("s").s(shortVersion),
-			w = draw("w").w(shortVersion),
-			
-			n2 = draw("n2").n(shortVersion, 200),
-			e2 = draw("e2").e(shortVersion, 200),
-			s2 = draw("s2").s(shortVersion, 200),
-			w2 = draw("w2").w(shortVersion, 200);
-			
-		shortVersion.chain(
-			{chain: "oneToMany"},
-			n.chain(n2),
-			e.chain(e2),
-			s.chain(s2),
-			w.chain(w2)
-		);
 	});
 	
 	addCase("relative position (cardinial directions 2)", function (draw) {
-		let helloWorld = draw("Hello world!").move(200, 250),
-			northEast = draw("northEast").northEast(helloWorld),
-			northWest = draw("northWest").northWest(helloWorld),
-			southEast = draw("southEast").southEast(helloWorld),
-			southWest = draw("southWest").southWest(helloWorld),
+		let helloWorld = draw("Hello world!").move(400, 275),
+			northEast = draw("northEast", ".northEast() | .ne()").northEast(helloWorld),
+			northWest = draw("northWest", ".northWest() | .nw()").northWest(helloWorld),
+			southEast = draw("southEast", ".southEast() | .se()").southEast(helloWorld),
+			southWest = draw("southWest", ".southWest() | .sw()").southWest(helloWorld),
 			
-			northEast2 = draw("northEast2").northEast(helloWorld, 200),
-			northWest2 = draw("northWest2").northWest(helloWorld, 200),
-			southEast2 = draw("southEast2").southEast(helloWorld, 200),
-			southWest2 = draw("southWest2").southWest(helloWorld, 200);
+			northEast2 = draw("northEast2", ".northEast(200) | .ne(200)").northEast(helloWorld, 200),
+			northWest2 = draw("northWest2", ".northWest(200) | .nw(200)").northWest(helloWorld, 200),
+			southEast2 = draw("southEast2", ".southEast(200) | .se(200)").southEast(helloWorld, 200),
+			southWest2 = draw("southWest2", ".southWest(200) | .sw(200)").southWest(helloWorld, 200);
 			
 		helloWorld.chain(
 			{chain: "oneToMany"},
@@ -70,61 +51,55 @@
 			southEast.chain(southEast2),
 			southWest.chain(southWest2)
 		);
-			
-		let shortVersion = draw("Short version!").move(700, 250).fill("orange"),
-			ne = draw("ne").ne(shortVersion),
-			nw = draw("nw").nw(shortVersion),
-			se = draw("se").se(shortVersion),
-			sw = draw("sw").sw(shortVersion),
-			
-			ne2 = draw("ne2").ne(shortVersion, 200),
-			nw2 = draw("nw2").nw(shortVersion, 200),
-			se2 = draw("se2").se(shortVersion, 200),
-			sw2 = draw("sw2").sw(shortVersion, 200);
-		
-		shortVersion.chain(
-			{chain: "oneToMany"},
-			ne.chain(ne2),
-			nw.chain(nw2),
-			se.chain(se2),
-			sw.chain(sw2)
-		);
 	});
 	
 	addCase("relative position (cartesian coordinates)", function (draw) {
-		let helloWorld = draw("Hello world!").move(400, 150),
-			cartesianNorth_distanceFromAndToEdge = draw("cartesianNorth(distance from & to edge)").cx(helloWorld.cx()).y2(helloWorld.y() - 100),
-			cartesianEast_distanceFromAndToEdge = draw("cartesianEast(distance from & to edge)").x(helloWorld.x2() + 100).cy(helloWorld.cy()),
-			cartesianWest_distanceFromAndToEdge = draw("cartesianWest(distance from & to edge)").x2(helloWorld.x() - 100).cy(helloWorld.cy()),
-			cartesianSouth_distanceFromAndToEdge = draw("cartesianSouth(distance from & to edge)").cx(helloWorld.cx()).y(helloWorld.y2() + 100);
-		helloWorld.chain(
-			{chain: "oneToMany"},
-			cartesianNorth_distanceFromAndToEdge,
-			cartesianEast_distanceFromAndToEdge,
-			cartesianWest_distanceFromAndToEdge,
-			cartesianSouth_distanceFromAndToEdge
-		);
-			
-		let helloWorld2 = draw("Hello world 2 !").move(400, 450).fill("orange"),
-			cartesianNorth_distanceFromAndToCenter = draw("cartesianNorth(distance from & to centers)").cx(helloWorld2.cx()).cy(helloWorld2.cy() - 100),
-			cartesianEast_distanceFromAndToCenter = draw("cartesianEast(distance from & to centers)").cx(helloWorld2.cx() + 300).cy(helloWorld2.cy()),
-			cartesianWest_distanceFromAndToCenter = draw("cartesianWest(distance from & to centers)").cx(helloWorld2.cx() - 300).cy(helloWorld2.cy()),
-			cartesianSouth_distanceFromAndToCenter = draw("cartesianSouth(distance from & to centers)").cx(helloWorld2.cx()).cy(helloWorld2.cy() + 100);
-		helloWorld2.chain(
-			{chain: "oneToMany"},
-			cartesianNorth_distanceFromAndToCenter,
-			cartesianEast_distanceFromAndToCenter,
-			cartesianWest_distanceFromAndToCenter,
-			cartesianSouth_distanceFromAndToCenter
-		);
+		let alignedOnCX = draw("Aligned on cx (horizontal center)").move(50, 50),
+			cxA = draw(".cx(node.cx())").cx(alignedOnCX.cx())
+						  .y2(alignedOnCX.y() - 10),
+			cxB = draw(".cx(node.cx())").cx(alignedOnCX.cx())
+						  .y(alignedOnCX.y2() + 10);
+						  
+		let alignedOnCY = draw("Aligned", "on", "cy", "(vertical center)").move(600, 10).fill("orange"),
+			cyA = draw(".cy(node.cy())").cy(alignedOnCY.cy())
+						  .x2(alignedOnCY.x() - 10),
+			cyB = draw(".cy(node.cy())").cy(alignedOnCY.cy())
+						  .x(alignedOnCY.x2() + 10);
+						  
+						  
+		let alignedOnX = draw("Aligned on x (left edge)").move(10, 300).fill("orange"),
+			xA = draw(".x(node.x())").x(alignedOnX.x())
+						  .y2(alignedOnX.y() - 10),
+			xB = draw(".x(node.x())").x(alignedOnX.x())
+						  .y(alignedOnX.y2() + 10);
+						  
+		let alignedOnX2 = draw("Aligned on x2 (right edge)").move(70, 500).fill("orange"),
+			x2A = draw(".x2(node.x2())").x2(alignedOnX2.x2())
+						  .y2(alignedOnX2.y() - 10),
+			x2B = draw(".x2(node.x2())").x2(alignedOnX2.x2())
+						  .y(alignedOnX2.y2() + 10);
+		
+		
+						  
+		let alignedOnY = draw("Aligned", "on", "y", "(top edge)").move(600, 250).fill("orange"),
+			yA = draw(".y(node.y())").y(alignedOnY.y())
+						  .x2(alignedOnY.x() - 10),
+			yB = draw(".y(node.y())").y(alignedOnY.y())
+						  .x(alignedOnY.x2() + 10);
+						  
+		let alignedOnY2 = draw("Aligned", "on", "y2", "(bottom edge)").move(600, 450).fill("orange"),
+			y2A = draw(".y2(node.y2())").y2(alignedOnY2.y2())
+						  .x2(alignedOnY2.x() - 10),
+			y2B = draw(".y2(node.y2())").y2(alignedOnY2.y2())
+						  .x(alignedOnY2.x2() + 10);
 	});
 	
 	addCase("relative position (polar coordinates)", function (draw) {
-		let helloWorld = draw("Hello world!").move(200, 200),
-			polarNorth = draw("polar(r:200, theta:-90°)").polar(helloWorld, -90, 200),
-			polarEast = draw("polar(r:200, theta:0°)").polar(helloWorld, 0, 200),
-			polarSouthWest = draw("polar(r:200, theta:135°)").polar(helloWorld, 135, 200),
-			polarNorthWest = draw("polar(r:200, theta:-135°)").polar(helloWorld, -135, 200);
+		let helloWorld = draw("Hello world!").move(200, 250),
+			polarNorth = draw("ϱ: 200\nϑ: -90°", "polar(200, -90)", "p(200, -90)").polar(helloWorld, -90, 200),
+			polarEast = draw("ϱ: 200\nϑ: 0°", "polar(200, 0)", "p(200, 0)").polar(helloWorld, 0, 200),
+			polarSouthWest = draw("ϱ: 200\nϑ: 135°", "polar(200, 135)", "p(200, 135)").polar(helloWorld, 135, 200),
+			polarNorthWest = draw("ϱ: 200\nϑ: -135°", "polar(200, -135)", "p(200, -135)").polar(helloWorld, -135, 200);
 		helloWorld.chain(
 			{chain: "oneToMany"},
 			polarNorth,
@@ -132,54 +107,80 @@
 			polarSouthWest,
 			polarNorthWest
 		);
-		let shortVersion = draw("Short version!").move(700, 400).fill("orange"),
-			pNorth = draw("p(r:200, theta:-90°)").p(shortVersion, -90, 200),
-			pEast = draw("p(r:200, theta:0°)").p(shortVersion, 0, 200),
-			pSouthWest = draw("p(r:200, theta:135°)").p(shortVersion, 135, 200),
-			pNorthWest = draw("p(r:200, theta:-135°)").p(shortVersion, -135, 200);
-		shortVersion.chain(
-			{chain: "oneToMany"},
-			pNorth,
-			pEast,
-			pSouthWest,
-			pNorthWest
-		);
 	});
 	
 	addCase("relative to last drawn by default", function (draw) {
-		draw("Hello").move(10,10);
-		draw("world").e();
-		draw("!").e();
-		draw("I").s();
-		draw("am").s();
-		draw("svgdiagram").s();
-		draw("Nice").e();
-		draw("to").s();
-		draw("meet").e();
-		draw("you").e();
-		draw(":)").n();
+		draw("Hello").move(70,20).chain(
+			draw("world", ".east() | .e()").e(),
+			draw("!", ".east() | .e()").e(),
+			draw("I", ".south() | .s()").s(),
+			draw("am", ".west() | .w()").w(),
+			draw("svgdiagram.", ".west() | .w()").w(),
+			draw("Nice", ".south() | .s()").s(),
+			draw("to", ".east() | .e()").e(),
+			draw("meet", ".east() | .e()").e(),
+			draw("you", ".east() | .e()").e(),
+			draw(":)", ".north() | .n()").n()
+		);
 	});
 	
 	addCase("position between other nodes", function (draw) {
-		let hello = draw("Hello").move(10,10).fill("lightgreen"),
-			exclamationMark = draw("!").e(200),
-			world =  draw("world").between(hello, exclamationMark).fill("orange");
+		let hello = draw("Hello").move(10,60).fill("lightgreen"),
+			exclamationMark = draw("!").e(300),
+			world =  draw("world", ".between(hello, exclamationMark)", ".between(hello, exclamationMark, 1/2)", ".b(hello, exclamationMark)").between(hello, exclamationMark).fill("orange");
+		world.chain(
+			{chain: "manyToOne"},
+			hello,
+			exclamationMark
+		);
 		
-		let i = draw("I").move(10,100),
-			svgdiagram = draw("svgdiagram").e(200),
-			am =  draw("am").between(i, svgdiagram, 1/4).fill("orange");
+		let i = draw("I").x2(hello.x2()).y(200),
+			svgdiagram = draw("svgdiagram").x(exclamationMark.x()).cy(i.cy()),
+			am =  draw("am", ".between(i, svgdiagram, 0.4)", ".b(i, svgdiagram, 0.4)").between(i, svgdiagram, 40/100).fill("orange");
+		am.chain(
+			{chain: "manyToOne"},
+			i,
+			svgdiagram
+		);
 			
 		let nice = draw("Nice").move(500, 10),
-			you = draw("you").se(),
-			toMeet =  draw("to meet").between(nice, you).fill("orange");
-			
+			you = draw("you").se(150),
+			toMeet =  draw("to meet", ".between(nice, you)", ".b(nice, you)").between(nice, you).fill("orange");
+		toMeet.chain(
+			{chain: "manyToOne"},
+			nice,
+			you
+		);
+		
 		let X1 = draw("X1").move(10,300),
-			X2 = draw("X2").se(),
-			x =  draw("x").bx(X1, X2).fill("orange");	
-			
+			X2 = draw("X2").se(150),
+			x12 =  draw("x12", ".bx(X1, X2)").bx(X1, X2).fill("orange"),
+			x21 =  draw("x21", ".bx(X2, X1)").bx(X2, X1).fill("yellow");
+		x12.chain(
+			{chain: "manyToOne"},
+			X1,
+			X2
+		);
+		x21.chain(
+			{chain: "manyToOne"},
+			X1,
+			X2
+		);
+		
 		let Y1 = draw("Y1").move(500,300),
-			Y2 = draw("Y2").se(),
-			y =  draw("y").by(Y1, Y2).fill("orange");
+			Y2 = draw("Y2").se(150),
+			y12 =  draw("y12", ".by(Y1, Y2)").by(Y1, Y2).fill("orange"),
+			y21 =  draw("y21", ".by(Y2, Y1)").by(Y2, Y1).fill("yellow");
+		y12.chain(
+			{chain: "manyToOne"},
+			Y1,
+			Y2
+		);
+		y21.chain(
+			{chain: "manyToOne"},
+			Y1,
+			Y2
+		);
 	});
 	
 	addCase("connections", function (draw) {
@@ -193,7 +194,7 @@
 						F = draw("F").ne(E, 25),
 						G = draw("G").se(E, 25);
 		A.chain(
-			{color: "red", chain: "oneToMany"}, // Affects AB, BH, HI, BC, CD, DE, EF, EG. They are all red. Regarding the "oneToMany", it affects only nodes and roots of node chains, so AB and AC
+			{color: "red", chain: "oneToMany"},
 			
 			B.chain(
 				H,
