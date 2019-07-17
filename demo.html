@@ -215,4 +215,17 @@
 			"A to C",
 		);
 	});
+	
+	addCase("frames", function (draw) {
+		let A = draw("A").move(200, 200),
+			B = draw("B").e(),
+			C = draw("Level 1 Frame", A, B);
+			
+		let E = draw("E").e(),
+			F = draw("Level 2 Frame", C, E);
+			
+		let G = draw("G").sw(F, 1/4),
+			H = draw("H").se(F, 1/4),
+			I = draw("Level 3 Frame", F, G, H);
+	});
 </script>

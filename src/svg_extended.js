@@ -1,8 +1,10 @@
 let parseRelativePositionArgs = function(svgElement, node, distance) {
+	let defaultDistance = 100;
+	
 	let args = {
-		node: node,
-		distance: distance || 100
-	};
+			node: node,
+			distance: distance || defaultDistance
+		};
 	
 	if(!node)
 		args.node = svgElement.doc().lastShape();
@@ -11,6 +13,9 @@ let parseRelativePositionArgs = function(svgElement, node, distance) {
 		args.node = svgElement.doc().lastShape();
 	}
 
+	if (args.distance <= 1)
+		args.distance = args.distance * defaultDistance;
+	
 	return args;
 }
 

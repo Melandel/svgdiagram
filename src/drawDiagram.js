@@ -27,11 +27,16 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 		*/
 		
 		// Dummy implementation
-		let drawn =  svg.rnode(...args);
+		let drawn;
+		if(args.some(x => x instanceof SVG.RNode))
+			drawn = svg.frame(...args);
+		else {
+			drawn =  svg.rnode(...args);
 		
-		if (window.isFirstNode) {
-			drawn.fill("orange");
-			window.isFirstNode = false;
+			if (window.isFirstNode) {
+				drawn.fill("orange");
+				window.isFirstNode = false;
+			}
 		}
 		
 		return drawn;

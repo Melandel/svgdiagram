@@ -11,6 +11,7 @@ $JsFileNames =
 	'svg_extended.js',
 	'rnode.js',
 	'arrow.js',
+	'frame.js',
 	'drawDiagram.js'
 
 $JsFilesFullPaths = 
