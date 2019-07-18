@@ -64,6 +64,9 @@ SVG.Frame = SVG.invent({
 				
 				this.doc().lastShape(frame);
 				return frame;
+			},
+			background: function(...content) {
+				return this.put(new SVG.Frame(...content)).back();
 			}
 		}
 	});

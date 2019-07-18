@@ -6183,7 +6183,7 @@ SVG.Frame = SVG.invent({
 					background_y_without_title = y_min - vMargin,
 					background_y2 = y2_max + vMargin;
 
-				let title = this.text(content[0])..cx((background_x + background_x2) / 2).y2(background_y_without_title).underline();
+				let title = this.text(content[0]).cx((background_x + background_x2) / 2).y2(background_y_without_title).underline();
 
 				background_x = Math.min(background_x, title.x() - hMargin);
 				background_x2 = Math.max(background_x2, title.x2() + hMargin);
@@ -6213,6 +6213,9 @@ SVG.Frame = SVG.invent({
 				
 				this.doc().lastShape(frame);
 				return frame;
+			},
+			background: function(...content) {
+				return this.put(new SVG.Frame(...content)).back();
 			}
 		}
 	});
@@ -6264,8 +6267,7 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	};
 	
 	drawContent(drawingTool);
-	svg.frame(title, ...svg.children());
-	// svg.drawTitle(title);
+	svg.background(title, ...svg.children().filter(x => x.type !== "defs"));
 	return svg;
 }
 

@@ -43,6 +43,6 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	};
 	
 	drawContent(drawingTool);
-	// svg.drawTitle(title);
+	svg.background(title, ...svg.children().filter(x => x.type !== "defs"));
 	return svg;
 }
