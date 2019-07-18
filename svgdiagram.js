@@ -5637,6 +5637,19 @@ SVG.extend(SVG.Text, SVG.Nested, {
 	}
 })
 
+SVG.extend(SVG.Text, {
+	underline: function () {
+		let parent = this.parent(),
+			underline = parent.rect(this.width(), 1).move(this.x(), this.y2() + 2).transform(this.transform()),
+			group = parent.group();
+
+		group.add(this);
+		group.add(underline);
+
+		return this;
+	}
+})
+
 SVG.extend(SVG.Nested, {
 	chain: function (...args) {
 		let defaultChainConfig = {
@@ -6170,7 +6183,7 @@ SVG.Frame = SVG.invent({
 					background_y_without_title = y_min - vMargin,
 					background_y2 = y2_max + vMargin;
 
-				let title = this.text(content[0]);title.cx((background_x + background_x2) / 2).y2(background_y_without_title);
+				let title = this.text(content[0])..cx((background_x + background_x2) / 2).y2(background_y_without_title).underline();
 
 				background_x = Math.min(background_x, title.x() - hMargin);
 				background_x2 = Math.max(background_x2, title.x2() + hMargin);
@@ -6251,6 +6264,7 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	};
 	
 	drawContent(drawingTool);
+	svg.frame(title, ...svg.children());
 	// svg.drawTitle(title);
 	return svg;
 }

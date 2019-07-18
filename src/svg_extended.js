@@ -28,6 +28,19 @@ SVG.extend(SVG.Text, SVG.Nested, {
 	}
 })
 
+SVG.extend(SVG.Text, {
+	underline: function () {
+		let parent = this.parent(),
+			underline = parent.rect(this.width(), 1).move(this.x(), this.y2() + 2).transform(this.transform()),
+			group = parent.group();
+
+		group.add(this);
+		group.add(underline);
+
+		return this;
+	}
+})
+
 SVG.extend(SVG.Nested, {
 	chain: function (...args) {
 		let defaultChainConfig = {
