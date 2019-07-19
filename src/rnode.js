@@ -40,7 +40,7 @@ SVG.RNode = SVG.invent({
 			}
 			
 			let background = this.rect(backgroundWidth, backgroundHeight)
-				.fill("lightgreen")
+				.fill("#F5E0B7")
 				.id(titleText + "_background")
 				.stroke({ width: 1})
 				.back();

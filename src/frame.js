@@ -37,9 +37,12 @@ SVG.Frame = SVG.invent({
 					background_y_without_title = y_min - (vMargin + extraVMargin) - underlineHeight,
 					background_y2 = y2_max + vMargin;
 
-				let title = this.text(capitalizeFirstLetter(content[0]))
+				let titleText = capitalizeFirstLetter(content[0]);
+				let title = this.text(titleText).id(titleText + "_title")
 					.setFontSize(window.refFontSize + 2 * depth)
-					.cx((background_x + background_x2) / 2).y2(background_y_without_title).underline();
+					.cx((background_x + background_x2) / 2).y2(background_y_without_title);
+				
+				this.id(titleText);
 				
 				background_x = Math.min(background_x, title.x() - hMargin);
 				background_x2 = Math.max(background_x2, title.x2() + hMargin);
@@ -49,6 +52,7 @@ SVG.Frame = SVG.invent({
 				background_height = (background_y2 - background_y);
 
 				background
+					.id(titleText + "_background")
 					.size(background_width, background_height)
 					.x(background_x)
 					.y(background_y);
@@ -62,6 +66,43 @@ SVG.Frame = SVG.invent({
 				this.title = title;
 				this.background = background;
 				
+				let backgroundColor,
+					textColor = "black";
+				switch (depth) {
+					case 1:
+						backgroundColor = "#D6BA73";
+						break;
+					case 2:
+						backgroundColor = "#8BBF9F";
+						break;
+					case 3:
+						backgroundColor = "#857E7B";
+						break;
+					case 4:
+						backgroundColor = "#59344F";
+						textColor = "white";
+						break;
+					case 5:
+						backgroundColor = "#011936";
+						textColor = "white";
+						break;
+					case 6:
+						backgroundColor = "#f4fffd";
+						break;
+					case 7:
+						backgroundColor = "#f9dc5c";
+						break;
+					case 8:
+						backgroundColor = "#52414c";
+						textColor = "white";
+						break;
+					default:
+						backgroundColor = "#596157";
+						textColor = "white";
+						break;
+				}
+				background.fill(backgroundColor);
+				title.fill(textColor).underline();
 				return this;
 		},
 		inherit: SVG.Nested,
@@ -79,7 +120,7 @@ SVG.Frame = SVG.invent({
 				return frame;
 			},
 			background: function(...content) {
-				return this.put(new SVG.Frame(...content)).id("globalBackground").fill('pink').back();
+				return this.put(new SVG.Frame(...content)).id("globalBackground").back();
 			}
 		}
 	});

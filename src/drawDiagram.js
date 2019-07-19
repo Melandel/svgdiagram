@@ -30,13 +30,13 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 		
 		// Dummy implementation
 		let drawn;
-		if(args.some(x => x instanceof SVG.RNode))
+		if(args.some(x => x instanceof SVG.Frame || x instanceof SVG.RNode))
 			drawn = svg.frame(...args);
 		else {
 			drawn =  svg.rnode(...args);
 		
 			if (window.isFirstNode) {
-				drawn.fill("orange");
+				drawn.fill("#ef3e36");
 				window.isFirstNode = false;
 			}
 		}
