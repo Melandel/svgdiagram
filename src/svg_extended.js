@@ -19,16 +19,20 @@ let parseRelativePositionArgs = function(svgElement, node, distance) {
 	return args;
 }
 
-SVG.extend(SVG.Text, SVG.Nested, {
+SVG.extend(SVG.Text, {
 	width: function () {
 		return this.bbox().width;
 	},
 	height: function () {
 		return this.bbox().height;
-	}
-})
-
-SVG.extend(SVG.Text, {
+	},
+	setFontSize: function(n) {
+		if (!window.refFontSize)
+			window.refFontSize = parseInt(window.getComputedStyle(document.body).fontSize);
+		
+		return this.font('size', (n <= 1) ? (n * window.refFontSize) : n)
+			.move(0,0); // https://github.com/svgdotjs/svg.js/issues/691#issuecomment-308067928
+	},
 	underline: function () {
 		let parent = this.parent(),
 			underline = parent.rect(this.width(), 1).move(this.x(), this.y2() + 2).transform(this.transform()),
@@ -42,6 +46,12 @@ SVG.extend(SVG.Text, {
 })
 
 SVG.extend(SVG.Nested, {
+	width: function () {
+		return this.bbox().width;
+	},
+	height: function () {
+		return this.bbox().height;
+	},
 	chain: function (...args) {
 		let defaultChainConfig = {
 				chain: "followThrough"

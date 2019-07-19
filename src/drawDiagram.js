@@ -1,8 +1,10 @@
 let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	let svg = SVG(domContainerID);
+	svg.node.addEventListener("mousedown", function (ev) { if (ev.button === 2) { this.style.cursor = "move";    } });
+	svg.node.addEventListener("mouseup",   function (ev) { if (ev.button === 2) { this.style.cursor = "default"; } });
+
 	window.svg = svg;
 	window.isFirstNode = true;
-	window.refFontSize = window.getComputedStyle(document.body).fontSize;
 	
 	let drawingTool = function(...args) {
 		/* NODES // depth:4
@@ -43,6 +45,8 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	};
 	
 	drawContent(drawingTool);
-	svg.background(title, ...svg.children().filter(x => x.type !== "defs"));
+	svg.background(capitalizeFirstLetter(title), ...svg.children().filter(x => x.type !== "defs"));
+	svg.initViewport();
+	
 	return svg;
 }

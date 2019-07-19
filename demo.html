@@ -8,11 +8,11 @@
 </html>
 <script>
 	addCase("Hello world", function (draw) {
-		draw("Hello world!").move(10,10);
+		draw("Hello world!");
 	});
 	
 	addCase("relative position (cardinial directions 1)", function (draw) {
-		let helloWorld = draw("Hello world!").move(320, 275),
+		let helloWorld = draw("Hello world!"),
 			north = draw("north", ".north() | .north(100) | .n() | .n(100)").north(),
 			east = draw("east", ".east()", ".east(100)", ".e()", ".e(100)").east(helloWorld),
 			south = draw("south", ".south() | .south(100) | .s() | .s(100)").south(helloWorld),

@@ -21,7 +21,7 @@
 					
 					if (config.caption) {
 						this.text(config.caption)
-							.font('size', 0.8 * parseInt(window.refFontSize))
+							.setFontSize(0.8)
 							.cx(0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
 							.cy(0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
 							.fill('SlateBlue');

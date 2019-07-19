@@ -1,4 +1,10 @@
-﻿/*!
+﻿capitalizeFirstLetter = function(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+
+
+/*!
 * svg.js - A lightweight library for manipulating and animating SVG.
 * @version 2.7.1
 * https://svgdotjs.github.io/
@@ -5628,16 +5634,20 @@ let parseRelativePositionArgs = function(svgElement, node, distance) {
 	return args;
 }
 
-SVG.extend(SVG.Text, SVG.Nested, {
+SVG.extend(SVG.Text, {
 	width: function () {
 		return this.bbox().width;
 	},
 	height: function () {
 		return this.bbox().height;
-	}
-})
-
-SVG.extend(SVG.Text, {
+	},
+	setFontSize: function(n) {
+		if (!window.refFontSize)
+			window.refFontSize = parseInt(window.getComputedStyle(document.body).fontSize);
+		
+		return this.font('size', (n <= 1) ? (n * window.refFontSize) : n)
+			.move(0,0); // https://github.com/svgdotjs/svg.js/issues/691#issuecomment-308067928
+	},
 	underline: function () {
 		let parent = this.parent(),
 			underline = parent.rect(this.width(), 1).move(this.x(), this.y2() + 2).transform(this.transform()),
@@ -5651,6 +5661,12 @@ SVG.extend(SVG.Text, {
 })
 
 SVG.extend(SVG.Nested, {
+	width: function () {
+		return this.bbox().width;
+	},
+	height: function () {
+		return this.bbox().height;
+	},
 	chain: function (...args) {
 		let defaultChainConfig = {
 				chain: "followThrough"
@@ -5821,17 +5837,17 @@ SVG.extend(SVG.Element, {
 SVG.RNode = SVG.invent({
 		create: function (...cells) {
 			SVG.Nested.call(this);
+			cells[0] = capitalizeFirstLetter(cells[0]);
 			
 			let titleText = cells[0];
 			this.id(titleText);
 			
 			let nbCells = cells.length,
 				textNodeTitleSizeFont = parseInt(window.refFontSize),
-				textNodeNormalTextSizeFont = 0.9 * parseInt(window.refFontSize),
-				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).font('size', textNodeNormalTextSizeFont)),
+				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).setFontSize(0.9)),
 				vMargin = 10;
 
-			let title = textNodes[0].font('size', textNodeTitleSizeFont);
+			let title = textNodes[0].setFontSize(1);
 			this[0] = title; // use like an array
 			
 			let maxTextNodeWidth = Math.max(...textNodes.map(x => x.width())),
@@ -5864,6 +5880,7 @@ SVG.RNode = SVG.invent({
 				.id(titleText + "_background")
 				.stroke({ width: 1})
 				.back();
+
 			this.background = background;
 			this.title = title;
 		},
@@ -5909,7 +5926,7 @@ SVG.RNode = SVG.invent({
 					
 					if (config.caption) {
 						this.text(config.caption)
-							.font('size', 0.8 * parseInt(window.refFontSize))
+							.setFontSize(0.8)
 							.cx(0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
 							.cy(0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
 							.fill('SlateBlue');
@@ -6172,19 +6189,24 @@ SVG.Frame = SVG.invent({
 				this.add(node);
 			}
 			
+			let depth = Math.max(1, maxChildFrameDepth + 1);
 			this.attr("depth", Math.max(1, maxChildFrameDepth + 1));
 			
 			let hMargin = 10 + 10 * maxChildFrameDepth,
-				vMargin = 10 + 10 * maxChildFrameDepth;
+				vMargin = 10 + 10 * maxChildFrameDepth,
+				extraVMargin = 2,
+				underlineHeight = 3;
 				
 				let background_x = x_min - hMargin,
 					background_x2 = x2_max + hMargin,
 					background_width = (background_x2 - background_x),
-					background_y_without_title = y_min - vMargin,
+					background_y_without_title = y_min - (vMargin + extraVMargin) - underlineHeight,
 					background_y2 = y2_max + vMargin;
 
-				let title = this.text(content[0]).cx((background_x + background_x2) / 2).y2(background_y_without_title).underline();
-
+				let title = this.text(capitalizeFirstLetter(content[0]))
+					.setFontSize(window.refFontSize + 2 * depth)
+					.cx((background_x + background_x2) / 2).y2(background_y_without_title).underline();
+				
 				background_x = Math.min(background_x, title.x() - hMargin);
 				background_x2 = Math.max(background_x2, title.x2() + hMargin);
 				background_width = background_x2 - background_x;
@@ -6196,17 +6218,25 @@ SVG.Frame = SVG.invent({
 					.size(background_width, background_height)
 					.x(background_x)
 					.y(background_y);
+				
 				this.move(background_x, background_y);
 
 				this.each(function (i, children) {
-					this.translate(-1 * background_x, -1 * background_y);
+					this.dx(-1 * background_x).dy(-1 * background_y);
 				});
 
 				this.title = title;
 				this.background = background;
+				
 				return this;
 		},
 		inherit: SVG.Nested,
+		extend: {
+			fill: function(fill) {
+				this.background.fill(fill);
+				return this;
+			}
+		},
 		construct: {
 			frame: function (...content) {
 				let frame = this.put(new SVG.Frame(...content)).back();
@@ -6215,18 +6245,291 @@ SVG.Frame = SVG.invent({
 				return frame;
 			},
 			background: function(...content) {
-				return this.put(new SVG.Frame(...content)).back();
+				return this.put(new SVG.Frame(...content)).id("globalBackground").fill('pink').back();
 			}
 		}
 	});
 
 
 
+var normalizeEvent = function(ev) {
+  if(!ev.touches) {
+    ev.touches = [{clientX: ev.clientX, clientY: ev.clientY}]
+  }
+
+  return ev.touches
+}
+
+SVG.extend(SVG.Doc, SVG.Nested, {
+
+  panZoom: function(options) {
+    this.off('.panZoom')
+
+    // when called with false, disable panZoom
+    if(options === false) return this
+
+    options = options || {}
+    this.zoomFactor = options.zoomFactor || 0.03
+    this.zoomMin = options.zoomMin || Number.MIN_VALUE
+    this.zoomMax = options.zoomMax || Number.MAX_VALUE
+	this.initialViewbox = options.initialViewbox
+
+    var lastP, posOnMouseUp, lastTouches, zoomInProgress = false
+
+    var wheelZoom = function(ev) {
+      ev.preventDefault()
+
+      // touchpads can give ev.deltaY == 0, which skews the lvl calculation
+      if(ev.deltaY == 0) return
+
+      var lvl = this.zoom() - this.zoomFactor * ev.deltaY/Math.abs(ev.deltaY)
+        , p = this.point(ev.clientX, ev.clientY)
+
+      if(lvl > this.zoomMax)
+        lvl = this.zoomMax
+
+      if(lvl < this.zoomMin)
+        lvl = this.zoomMin
+
+      this.zoom(lvl, p)
+    }
+
+    var pinchZoomStart = function(ev) {
+      lastTouches = normalizeEvent(ev)
+
+      if(lastTouches.length < 2) return
+      ev.preventDefault()
+
+      if(this.fire('pinchZoomStart', {event: ev}).event().defaultPrevented)
+        return
+
+      this.off('touchstart.panZoom', pinchZoomStart)
+
+      zoomInProgress = true
+      SVG.on(document, 'touchmove.panZoom', pinchZoom, this, {passive:false})
+      SVG.on(document, 'touchend.panZoom', pinchZoomStop, this, {passive:false})
+    }
+
+    var pinchZoomStop = function(ev) {
+      ev.preventDefault()
+      zoomInProgress = false
+
+      this.fire('pinchZoomEnd', {event: ev})
+
+      SVG.off(document,'touchmove.panZoom', pinchZoom)
+      SVG.off(document,'touchend.panZoom', pinchZoomStop)
+      this.on('touchstart.panZoom', pinchZoomStart)
+    }
+
+    var pinchZoom = function(ev) {
+      ev.preventDefault()
+
+      var currentTouches = normalizeEvent(ev)
+        , zoom = this.zoom()
+
+      // Distance Formula
+      var lastDelta = Math.sqrt(
+        Math.pow(lastTouches[0].clientX - lastTouches[1].clientX, 2) +
+        Math.pow(lastTouches[0].clientY - lastTouches[1].clientY, 2)
+      )
+
+      var currentDelta = Math.sqrt(
+        Math.pow(currentTouches[0].clientX - currentTouches[1].clientX, 2) +
+        Math.pow(currentTouches[0].clientY - currentTouches[1].clientY, 2)
+      )
+
+      var zoomAmount = lastDelta/currentDelta
+
+      if((zoom < this.zoomMin && zoomAmount > 1) || (zoom > this.zoomMax && zoomAmount < 1))
+        zoomAmount = 1
+
+      var currentFocus = {
+        x: currentTouches[0].clientX + 0.5 * (currentTouches[1].clientX - currentTouches[0].clientX),
+        y: currentTouches[0].clientY + 0.5 * (currentTouches[1].clientY - currentTouches[0].clientY)
+      }
+
+      var lastFocus = {
+        x: lastTouches[0].clientX + 0.5 * (lastTouches[1].clientX - lastTouches[0].clientX),
+        y: lastTouches[0].clientY + 0.5 * (lastTouches[1].clientY - lastTouches[0].clientY)
+      }
+
+      var p = this.point(currentFocus.x, currentFocus.y)
+      var focusP = this.point(2*currentFocus.x-lastFocus.x, 2*currentFocus.y-lastFocus.y)
+      var box = new SVG.Box(this.viewbox()).transform(
+        new SVG.Matrix()
+          .translate(p.x, p.y)
+          .scale(zoomAmount, 0, 0)
+          .translate(-focusP.x, -focusP.y)
+      )
+
+      this.viewbox(box)
+
+      lastTouches = currentTouches
+
+      this.fire('zoom', {box: box, focus: focusP})
+    }
+
+    var panStart = function(ev) {
+		if(ev.buttons !== 2) {
+			// Comportement par dÃ©faut
+			let sel = window.getSelection ? window.getSelection() : document.selection;
+			
+			if (sel && sel.removeAllRanges)
+				sel.removeAllRanges();
+			else if (sel && sel.empty)
+				sel.empty();
+			
+			return;
+		}
+		ev.preventDefault()
+      this.off('mousedown.panZoom', panStart)
+
+      lastTouches = normalizeEvent(ev)
+
+      if(zoomInProgress) return
+
+      this.fire('panStart', {event: ev})
+
+      lastP = {x: lastTouches[0].clientX, y: lastTouches[0].clientY }
+	  posOnMouseUp = lastP
+
+      SVG.on(document, 'mousemove.panZoom', panning, this)
+      SVG.on(document, 'mouseup.panZoom', panStop, this)
+	  this.off('mouseup.panZoom', resetViewboxToInitialOne);
+    }
+
+	var resetViewboxToInitialOne = function(ev) {
+		ev.preventDefault();
+		if(ev.which !== 3)
+			return;
+		
+		this.viewbox(this.initialViewbox);
+	}
+	
+    var panStop = function(ev) {
+		ev.preventDefault()
+		if(ev.which !== 3)
+			return;	
+      SVG.off(document,'mousemove.panZoom', panning)
+      SVG.off(document,'mouseup.panZoom', panStop)
+      this.on('mousedown.panZoom', panStart)
+      this.fire('panEnd', {event: ev})
+	  
+	  lastTouches = normalizeEvent(ev)
+	  if (posOnMouseUp.x === lastTouches[0].clientX && posOnMouseUp.y === lastTouches[0].clientY)
+		this.viewbox(this.initialViewbox);
+	  else
+		this.on('mouseup.panZoom', resetViewboxToInitialOne, this);
+    }
+
+    var panning = function(ev) {
+		if(ev.buttons !== 2)
+			return;
+		ev.preventDefault()
+		
+      var currentTouches = normalizeEvent(ev)
+
+      var currentP = {x: currentTouches[0].clientX, y: currentTouches[0].clientY }
+        , p1 = this.point(currentP.x, currentP.y)
+        , p2 = this.point(lastP.x, lastP.y)
+        , deltaP = [p2.x - p1.x, p2.y - p1.y]
+        , box = new SVG.Box(this.viewbox()).transform(new SVG.Matrix().translate(deltaP[0], deltaP[1]))
+
+      this.viewbox(box)
+      lastP = currentP
+    }
+
+    this.on('wheel.panZoom', wheelZoom)
+    this.on('touchstart.panZoom', pinchZoomStart, this, {passive:false})
+	// MTR //////////////////////////////////////////////////////////
+	// No panning. I want to enable selection of the text in the SVG.
+	// Commenting the following line:
+    this.on('mousedown.panZoom', panStart, this)
+	this.on('contextmenu', function(e) { e.preventDefault(); });
+    return this
+
+  },
+
+  zoom: function(level, point) {
+    var width = this.node.clientWidth
+      , height = this.node.clientHeight
+      , v = this.viewbox()
+
+    // Firefox does not support clientHeight and returns 0
+    if (!width && !height) {
+      var style = window.getComputedStyle(this.node)
+      width = parseFloat(style.getPropertyValue('width'))
+      height = parseFloat(style.getPropertyValue('height'))
+    }
+
+    var zoomX = width / v.width
+      , zoomY = height / v.height
+      , zoom = Math.min(zoomX, zoomY)
+
+    if(level == null) {
+      return zoom
+    }
+
+    var zoomAmount = zoom / level
+    if(zoomAmount === Infinity) zoomAmount = Number.MIN_VALUE
+
+    point = point || new SVG.Point(width/2 / zoomX + v.x, height/2 / zoomY + v.y)
+
+    var box = new SVG.Box(v)
+      .transform(new SVG.Matrix()
+        .scale(zoomAmount, point.x, point.y)
+      )
+
+    if(this.fire('zoom', {box: box, focus: point}).event().defaultPrevented)
+      return this
+
+    return this.viewbox(box)
+  }
+})
+
+SVG.extend(SVG.FX, {
+  zoom: function(level, point) {
+    return this.add('zoom', [new SVG.Number(level)].concat(point || []))
+  }
+})
+
+
+
+SVG.extend(SVG.Doc, {
+	initViewport: function(visibleBorderPxWhenAtMinimalZoom = 20) {
+		// let X_AXIS = { trunk: this.rect(5, 1), tip: this.path('M5 0.5 L5 -2 L 8 0.5 L 5 3 Z'), caption: this.text('X').y(-20) },
+			// Y_AXIS = { trunk: this.rect(1, 5), tip: this.path('M0.5 5 L-2 5 L 0.5 8 L 3 5 Z'), caption: this.text('Y').x(-12) };
+			
+		let initialViewbox = this.bbox();
+			initialViewbox.x -= visibleBorderPxWhenAtMinimalZoom;
+			initialViewbox.x2 += visibleBorderPxWhenAtMinimalZoom;
+			initialViewbox.width += 2 * visibleBorderPxWhenAtMinimalZoom;
+			initialViewbox.y -= visibleBorderPxWhenAtMinimalZoom;
+			initialViewbox.y2 += visibleBorderPxWhenAtMinimalZoom;
+			initialViewbox.height += 2 * visibleBorderPxWhenAtMinimalZoom;
+		
+		let zoomMin = this.viewbox(initialViewbox).zoom(), // Also sets the initial Zoom in the process
+		zoomMax = 10;
+
+		this.panZoom({
+			zoomMin: zoomMin,
+			zoomMax: zoomMax,
+			initialViewbox: initialViewbox
+		});
+		
+		return this;
+	}
+});
+
+
+
 let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	let svg = SVG(domContainerID);
+	svg.node.addEventListener("mousedown", function (ev) { if (ev.button === 2) { this.style.cursor = "move";    } });
+	svg.node.addEventListener("mouseup",   function (ev) { if (ev.button === 2) { this.style.cursor = "default"; } });
+
 	window.svg = svg;
 	window.isFirstNode = true;
-	window.refFontSize = window.getComputedStyle(document.body).fontSize;
 	
 	let drawingTool = function(...args) {
 		/* NODES // depth:4
@@ -6267,7 +6570,9 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 	};
 	
 	drawContent(drawingTool);
-	svg.background(title, ...svg.children().filter(x => x.type !== "defs"));
+	svg.background(capitalizeFirstLetter(title), ...svg.children().filter(x => x.type !== "defs"));
+	svg.initViewport();
+	
 	return svg;
 }
 

@@ -23,19 +23,24 @@ SVG.Frame = SVG.invent({
 				this.add(node);
 			}
 			
+			let depth = Math.max(1, maxChildFrameDepth + 1);
 			this.attr("depth", Math.max(1, maxChildFrameDepth + 1));
 			
 			let hMargin = 10 + 10 * maxChildFrameDepth,
-				vMargin = 10 + 10 * maxChildFrameDepth;
+				vMargin = 10 + 10 * maxChildFrameDepth,
+				extraVMargin = 2,
+				underlineHeight = 3;
 				
 				let background_x = x_min - hMargin,
 					background_x2 = x2_max + hMargin,
 					background_width = (background_x2 - background_x),
-					background_y_without_title = y_min - vMargin,
+					background_y_without_title = y_min - (vMargin + extraVMargin) - underlineHeight,
 					background_y2 = y2_max + vMargin;
 
-				let title = this.text(content[0]).cx((background_x + background_x2) / 2).y2(background_y_without_title).underline();
-
+				let title = this.text(capitalizeFirstLetter(content[0]))
+					.setFontSize(window.refFontSize + 2 * depth)
+					.cx((background_x + background_x2) / 2).y2(background_y_without_title).underline();
+				
 				background_x = Math.min(background_x, title.x() - hMargin);
 				background_x2 = Math.max(background_x2, title.x2() + hMargin);
 				background_width = background_x2 - background_x;
@@ -47,17 +52,25 @@ SVG.Frame = SVG.invent({
 					.size(background_width, background_height)
 					.x(background_x)
 					.y(background_y);
+				
 				this.move(background_x, background_y);
 
 				this.each(function (i, children) {
-					this.translate(-1 * background_x, -1 * background_y);
+					this.dx(-1 * background_x).dy(-1 * background_y);
 				});
 
 				this.title = title;
 				this.background = background;
+				
 				return this;
 		},
 		inherit: SVG.Nested,
+		extend: {
+			fill: function(fill) {
+				this.background.fill(fill);
+				return this;
+			}
+		},
 		construct: {
 			frame: function (...content) {
 				let frame = this.put(new SVG.Frame(...content)).back();
@@ -66,7 +79,7 @@ SVG.Frame = SVG.invent({
 				return frame;
 			},
 			background: function(...content) {
-				return this.put(new SVG.Frame(...content)).back();
+				return this.put(new SVG.Frame(...content)).id("globalBackground").fill('pink').back();
 			}
 		}
 	});

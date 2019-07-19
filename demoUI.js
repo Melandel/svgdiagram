@@ -72,11 +72,13 @@ var addCase = function(title, drawFunction) {
 		
 		let svgGenerationStart = Date.now(),
 			svgDiagram = drawDiagram(svgContainer.id, title, drawFunction),
-			nbElements = svgDiagram.children().length,
 			generationDuration = Date.now() - svgGenerationStart,
 			drawFunctionIndentation = "\t\t",
 			functionIndentationDefaultLevel = drawFunctionIndentation.length,
-			drawFunctionBody = drawFunction.toString().match(/function[^{]+\{([\s\S]*)\}$/)[1].split('\n').map(function(str) { return str.substring(functionIndentationDefaultLevel); }).join('\n').replace(/\t/g, '    ');
+			drawFunctionBody = drawFunction.toString().match(/function[^{]+\{([\s\S]*)\}$/)[1].split('\n').map(function(str) { return str.substring(functionIndentationDefaultLevel); }).join('\n').replace(/\t/g, '    '),
+			nbElements = 0;
+			
+		svgDiagram.each(function(i, children) { nbElements++; }, true);
 		window.svg = svgDiagram;
 		statusBar.textContent = `svg (${nbElements} elements) generated in ${generationDuration}ms.`
 		codeContainer.insertAdjacentHTML("beforeend", "<pre>" + drawFunctionBody + "</pre>");

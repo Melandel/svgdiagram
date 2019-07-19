@@ -1,17 +1,17 @@
 SVG.RNode = SVG.invent({
 		create: function (...cells) {
 			SVG.Nested.call(this);
+			cells[0] = capitalizeFirstLetter(cells[0]);
 			
 			let titleText = cells[0];
 			this.id(titleText);
 			
 			let nbCells = cells.length,
 				textNodeTitleSizeFont = parseInt(window.refFontSize),
-				textNodeNormalTextSizeFont = 0.9 * parseInt(window.refFontSize),
-				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).font('size', textNodeNormalTextSizeFont)),
+				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).setFontSize(0.9)),
 				vMargin = 10;
 
-			let title = textNodes[0].font('size', textNodeTitleSizeFont);
+			let title = textNodes[0].setFontSize(1);
 			this[0] = title; // use like an array
 			
 			let maxTextNodeWidth = Math.max(...textNodes.map(x => x.width())),
@@ -44,6 +44,7 @@ SVG.RNode = SVG.invent({
 				.id(titleText + "_background")
 				.stroke({ width: 1})
 				.back();
+
 			this.background = background;
 			this.title = title;
 		},

@@ -7,11 +7,14 @@ if (Test-Path $svgDiagramSingleFileFullPath) {
 
 $JsFilesFolderFullPath = Join-Path $CurrentFullPath "src"
 $JsFileNames =
+	'utils.js',
 	'svg.js',
 	'svg_extended.js',
 	'rnode.js',
 	'arrow.js',
 	'frame.js',
+	'panningAndZooming.js',
+	'initViewport.js',
 	'drawDiagram.js'
 
 $JsFilesFullPaths = 
