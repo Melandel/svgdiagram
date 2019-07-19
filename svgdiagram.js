@@ -5853,7 +5853,7 @@ SVG.RNode = SVG.invent({
 			let maxTextNodeWidth = Math.max(...textNodes.map(x => x.width())),
 				hMargin = 10,
 				backgroundWidth = hMargin + maxTextNodeWidth + hMargin;
-			title.y(0.8 * vMargin).cx(backgroundWidth / 2);
+			title.y(0.5 * vMargin).cx(backgroundWidth / 2);
 
 			let backgroundHeight;
 			if (nbCells === 1)
