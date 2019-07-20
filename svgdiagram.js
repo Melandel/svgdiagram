@@ -5677,7 +5677,11 @@ SVG.extend(SVG.Nested, {
 
 SVG.extend(SVG.Element, SVG.Nested, {
 	X: function() {
-		return this.attr("X") || this.x();
+		let attrX = this.attr("X");
+		if (attrX == null)
+			return this.x();
+		else
+			return attrX;
 	},
 	X2: function() {
 		return this.X() + this.width();
@@ -5686,7 +5690,11 @@ SVG.extend(SVG.Element, SVG.Nested, {
 		return this.X()  + 0.5 * this.width();
 	},
 	Y: function() {
-		return this.attr("Y") || this.y();
+		let attrY = this.attr("Y");
+		if (attrY == null)
+			return this.y();
+		else
+			return attrY;
 	},
 	Y2: function() {
 		return this.Y() + this.height();
@@ -5760,18 +5768,14 @@ SVG.extend(SVG.Element, {
 	p:     function(node, angleInDegrees, distance) { return this._polar(angleInDegrees, parseRelativePositionArgs(this, node, distance)); },
 	
 	_bx: function(node1, node2, fraction) { 
-	debugger;
-		if (Math.abs(node1.CX() - node2.CX()) < 0.2) { 
-			return this.cx(node1.CX()); }
-		else if (node1.CX() < node2.CX())            { 
-			return this.cx(node1.X2() + (fraction || 0.5)*(node2.X()  - node1.X2())); }
-		else                                         { 
-			return this.cx(node1.X()  + (fraction || 0.5)*(node2.X2() - node1.X() )); }
+		if (Math.abs(node1.CX() - node2.CX()) < 0.2) { return this.cx(node1.CX()); }
+		else if (node1.CX() < node2.CX())            { return this.cx(node1.X2() + (fraction || 0.5)*(node2.X()  - node1.X2())); }
+		else                                         { return this.cx(node1.X()  + (fraction || 0.5)*(node2.X2() - node1.X() )); }
 	},
 	_by: function(node1, node2, fraction) { 
 		if (Math.abs(node1.CY() - node2.CY()) < 0.2) { return this.cy(node1.CY()); }
-		else if (node1.CY() < node2.CY())            { return this.cy(Math.max(node1.Y2() + 2, node1.Y2() + (fraction || 0.5)*(node2.Y()  - node1.Y2()))); }
-		else                                         { return this.cy(Math.min(node1.Y()  - 2, node1.Y()  + (fraction || 0.5)*(node2.Y2() - node1.Y() ))); }
+		else if (node1.CY() < node2.CY())            { return this.cy(node1.Y2() + (fraction || 0.5)*(node2.Y()  - node1.Y2())); }
+		else                                         { return this.cy(node1.Y()  + (fraction || 0.5)*(node2.Y2() - node1.Y() )); }
 	},
 	between: function(node1, node2, fraction) { return this._bx(node1, node2, fraction)._by(node1, node2, fraction); },
 	b:       function(node1, node2, fraction) { return this._bx(node1, node2, fraction)._by(node1, node2, fraction); },
@@ -5953,14 +5957,14 @@ SVG.RNode = SVG.invent({
 						L ${0} ${0 + 1}
 						Z
 					`).rotate(config.angle_degrees, 0, 0)
-					  .fill(config.color ||'#4F5F65');
+					  .fill(config.color ||'#303030');
 					
 					if (config.caption) {
 						this.text(config.caption)
 							.setFontSize(0.8)
 							.cx(0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
 							.cy(0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
-							.fill(config.color ||'#4F5F65');
+							.fill(config.color ||'#303030');
 					}
 				break;
 			}
@@ -6258,6 +6262,8 @@ SVG.Frame = SVG.invent({
 
 				this.each(function (i, children) {
 					if (!this.attr("X")) {
+						if (this.id() == "API SMP-Olay")
+							debugger;
 						this.attr("X", this.x());
 						this.attr("Y", this.y());
 					}
@@ -6574,8 +6580,8 @@ SVG.extend(SVG.FX, {
 
 SVG.extend(SVG.Doc, {
 	initViewport: function(visibleBorderPxWhenAtMinimalZoom = 20) {
-		// let X_AXIS = { trunk: this.rect(5, 1), tip: this.path('M5 0.5 L5 -2 L 8 0.5 L 5 3 Z'), caption: this.text('X').y(-20) },
-			// Y_AXIS = { trunk: this.rect(1, 5), tip: this.path('M0.5 5 L-2 5 L 0.5 8 L 3 5 Z'), caption: this.text('Y').x(-12) };
+		let X_AXIS = { trunk: this.rect(5, 1), tip: this.path('M5 0.5 L5 -2 L 8 0.5 L 5 3 Z'), caption: this.text('X').y(-20) },
+			Y_AXIS = { trunk: this.rect(1, 5), tip: this.path('M0.5 5 L-2 5 L 0.5 8 L 3 5 Z'), caption: this.text('Y').x(-12) };
 			
 		let initialViewbox = this.bbox();
 			initialViewbox.x -= visibleBorderPxWhenAtMinimalZoom;

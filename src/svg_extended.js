@@ -62,7 +62,11 @@ SVG.extend(SVG.Nested, {
 
 SVG.extend(SVG.Element, SVG.Nested, {
 	X: function() {
-		return this.attr("X") || this.x();
+		let attrX = this.attr("X");
+		if (attrX == null)
+			return this.x();
+		else
+			return attrX;
 	},
 	X2: function() {
 		return this.X() + this.width();
@@ -71,7 +75,11 @@ SVG.extend(SVG.Element, SVG.Nested, {
 		return this.X()  + 0.5 * this.width();
 	},
 	Y: function() {
-		return this.attr("Y") || this.y();
+		let attrY = this.attr("Y");
+		if (attrY == null)
+			return this.y();
+		else
+			return attrY;
 	},
 	Y2: function() {
 		return this.Y() + this.height();
@@ -145,7 +153,6 @@ SVG.extend(SVG.Element, {
 	p:     function(node, angleInDegrees, distance) { return this._polar(angleInDegrees, parseRelativePositionArgs(this, node, distance)); },
 	
 	_bx: function(node1, node2, fraction) { 
-	debugger;
 		if (Math.abs(node1.CX() - node2.CX()) < 0.2) { return this.cx(node1.CX()); }
 		else if (node1.CX() < node2.CX())            { return this.cx(node1.X2() + (fraction || 0.5)*(node2.X()  - node1.X2())); }
 		else                                         { return this.cx(node1.X()  + (fraction || 0.5)*(node2.X2() - node1.X() )); }

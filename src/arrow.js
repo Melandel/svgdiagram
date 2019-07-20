@@ -17,14 +17,14 @@
 						L ${0} ${0 + 1}
 						Z
 					`).rotate(config.angle_degrees, 0, 0)
-					  .fill(config.color ||'#4F5F65');
+					  .fill(config.color ||'#303030');
 					
 					if (config.caption) {
 						this.text(config.caption)
 							.setFontSize(0.8)
 							.cx(0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
 							.cy(0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
-							.fill(config.color ||'#4F5F65');
+							.fill(config.color ||'#303030');
 					}
 				break;
 			}
