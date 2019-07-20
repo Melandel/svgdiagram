@@ -145,14 +145,15 @@ SVG.extend(SVG.Element, {
 	p:     function(node, angleInDegrees, distance) { return this._polar(angleInDegrees, parseRelativePositionArgs(this, node, distance)); },
 	
 	_bx: function(node1, node2, fraction) { 
-		if (Math.abs(node1.cx() - node2.cx()) < 0.2) { return this.cx(node1.CX()); }
-		else if (node1.cx() < node2.cx())            { return this.cx(Math.max(node1.X2() + 2, node1.X2() + (fraction || 0.5)*(node2.X()  - node1.X2()))); }
-		else                                         { return this.cx(Math.min(node1.X()  - 2, node1.X()  + (fraction || 0.5)*(node2.X2() - node1.X() ))); }
+	debugger;
+		if (Math.abs(node1.CX() - node2.CX()) < 0.2) { return this.cx(node1.CX()); }
+		else if (node1.CX() < node2.CX())            { return this.cx(node1.X2() + (fraction || 0.5)*(node2.X()  - node1.X2())); }
+		else                                         { return this.cx(node1.X()  + (fraction || 0.5)*(node2.X2() - node1.X() )); }
 	},
 	_by: function(node1, node2, fraction) { 
-		if (Math.abs(node1.cy() - node2.cy()) < 0.2) { return this.cy(node1.cy()); }
-		else if (node1.cy() < node2.cy())            { return this.cy(Math.max(node1.Y2() + 2, node1.Y2() + (fraction || 0.5)*(node2.Y()  - node1.Y2()))); }
-		else                                         { return this.cy(Math.min(node1.Y()  - 2, node1.Y()  + (fraction || 0.5)*(node2.Y2() - node1.Y() ))); }
+		if (Math.abs(node1.CY() - node2.CY()) < 0.2) { return this.cy(node1.CY()); }
+		else if (node1.CY() < node2.CY())            { return this.cy(node1.Y2() + (fraction || 0.5)*(node2.Y()  - node1.Y2())); }
+		else                                         { return this.cy(node1.Y()  + (fraction || 0.5)*(node2.Y2() - node1.Y() )); }
 	},
 	between: function(node1, node2, fraction) { return this._bx(node1, node2, fraction)._by(node1, node2, fraction); },
 	b:       function(node1, node2, fraction) { return this._bx(node1, node2, fraction)._by(node1, node2, fraction); },
