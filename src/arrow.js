@@ -54,68 +54,68 @@ let parseArrowArgs = function(fromNode, toNode, options) {
 		let isFromCenter = false;
 		switch (options.from) {
 			case "e":
-				args.xfrom = fromNode.x2();
-				args.yfrom = fromNode.cy();
+				args.xfrom = fromNode.X2();
+				args.yfrom = fromNode.CY();
 				break;
 			case "s":
-				args.xfrom = fromNode.cx();
-				args.yfrom = fromNode.y2();
+				args.xfrom = fromNode.CX();
+				args.yfrom = fromNode.Y2();
 				break;
 			case "w":
-				args.xfrom = fromNode.x();
-				args.yfrom = fromNode.cy();
+				args.xfrom = fromNode.X();
+				args.yfrom = fromNode.CY();
 				break;
 			case "n":
-				args.xfrom = fromNode.cx();
-				args.yfrom = fromNode.y();
+				args.xfrom = fromNode.CX();
+				args.yfrom = fromNode.Y();
 				break;
 			case "ne":
-				args.xfrom = fromNode.x2();
-				args.yfrom = fromNode.y();
+				args.xfrom = fromNode.X2();
+				args.yfrom = fromNode.Y();
 				break;
 			case "nw":
-				args.xfrom = fromNode.x();
-				args.yfrom = fromNode.y();
+				args.xfrom = fromNode.X();
+				args.yfrom = fromNode.Y();
 				break;
 			case "se":
-				args.xfrom = fromNode.x2();
-				args.yfrom = fromNode.y2();
+				args.xfrom = fromNode.X2();
+				args.yfrom = fromNode.Y2();
 				break;
 			case "sw":
-				args.xfrom = fromNode.x();
-				args.yfrom = fromNode.y2();
+				args.xfrom = fromNode.X();
+				args.yfrom = fromNode.Y2();
 				break;
 			case "ese":
-				args.xfrom = fromNode.x2();
-				args.yfrom = fromNode.y() + 0.75 * (fromNode.y2() - fromNode.y());
+				args.xfrom = fromNode.X2();
+				args.yfrom = fromNode.Y() + 0.75 * (fromNode.Y2() - fromNode.Y());
 				break;
 			case "sse":
-				args.xfrom = fromNode.x() + 0.75 * (fromNode.x2() - fromNode.x());
-				args.yfrom = fromNode.y2();
+				args.xfrom = fromNode.X() + 0.75 * (fromNode.X2() - fromNode.X());
+				args.yfrom = fromNode.Y2();
 				break;
 			case "ssw":
-				args.xfrom = fromNode.x() + 0.25 * (fromNode.x2() - fromNode.x());
-				args.yfrom = fromNode.y2();
+				args.xfrom = fromNode.X() + 0.25 * (fromNode.X2() - fromNode.X());
+				args.yfrom = fromNode.Y2();
 				break;
 			case "wsw":
-				args.xfrom = fromNode.x();
-				args.yfrom = fromNode.y() + 0.75 * (fromNode.y2() - fromNode.y());
+				args.xfrom = fromNode.X();
+				args.yfrom = fromNode.Y() + 0.75 * (fromNode.Y2() - fromNode.Y());
 				break;
 			case "wnw":
-				args.xfrom = fromNode.x();
-				args.yfrom = fromNode.y() + 0.25 * (fromNode.y2() - fromNode.y());
+				args.xfrom = fromNode.X();
+				args.yfrom = fromNode.Y() + 0.25 * (fromNode.Y2() - fromNode.Y());
 				break;
 			case "nnw":
-				args.xfrom = fromNode.x() + 0.25 * (fromNode.x2() - fromNode.x());
-				args.yfrom = fromNode.y();
+				args.xfrom = fromNode.X() + 0.25 * (fromNode.X2() - fromNode.X());
+				args.yfrom = fromNode.Y();
 				break;
 			case "nne":
-				args.xfrom = fromNode.x() + 0.75 * (fromNode.x2() - fromNode.x());
-				args.yfrom = fromNode.y();
+				args.xfrom = fromNode.X() + 0.75 * (fromNode.X2() - fromNode.X());
+				args.yfrom = fromNode.Y();
 				break;
 			case "ene":
-				args.xfrom = fromNode.x2();
-				args.yfrom = fromNode.y() + 0.25 * (fromNode.y2() - fromNode.y());
+				args.xfrom = fromNode.X2();
+				args.yfrom = fromNode.Y() + 0.25 * (fromNode.Y2() - fromNode.Y());
 				break;
 			default:
 				isFromCenter = true;
@@ -125,68 +125,68 @@ let parseArrowArgs = function(fromNode, toNode, options) {
 		let isToCenter = false;
 		switch (options.to) {
 			case "e":
-				args.xto = toNode.x2();
-				args.yto = toNode.cy();
+				args.xto = toNode.X2();
+				args.yto = toNode.CY();
 				break;
 			case "s":
-				args.xto = toNode.cx();
-				args.yto = toNode.y2();
+				args.xto = toNode.CX();
+				args.yto = toNode.Y2();
 				break;
 			case "w":
-				args.xto = toNode.x();
-				args.yto = toNode.cy();
+				args.xto = toNode.X();
+				args.yto = toNode.CY();
 				break;
 			case "n":
-				args.xto = toNode.cx();
-				args.yto = toNode.y();
+				args.xto = toNode.CX();
+				args.yto = toNode.Y();
 				break;
 			case "ne":
-				args.xto = toNode.x2();
-				args.yto = toNode.y();
+				args.xto = toNode.X2();
+				args.yto = toNode.Y();
 				break;
 			case "nw":
-				args.xto = toNode.x();
-				args.yto = toNode.y();
+				args.xto = toNode.X();
+				args.yto = toNode.Y();
 				break;
 			case "se":
-				args.xto = toNode.x2();
-				args.yto = toNode.y2();
+				args.xto = toNode.X2();
+				args.yto = toNode.Y2();
 				break;
 			case "sw":
-				args.xto = toNode.x();
-				args.yto = toNode.y2();
+				args.xto = toNode.X();
+				args.yto = toNode.Y2();
 				break;
 			case "ese":
-				args.xto = toNode.x2();
-				args.yto = toNode.y() + 0.75 * (toNode.y2() - toNode.y());
+				args.xto = toNode.X2();
+				args.yto = toNode.Y() + 0.75 * (toNode.Y2() - toNode.Y());
 				break;
 			case "sse":
-				args.xto = toNode.x() + 0.75 * (toNode.x2() - toNode.x());
-				args.yto = toNode.y2();
+				args.xto = toNode.X() + 0.75 * (toNode.X2() - toNode.X());
+				args.yto = toNode.Y2();
 				break;
 			case "ssw":
-				args.xto = toNode.x() + 0.25 * (toNode.x2() - toNode.x());
-				args.yto = toNode.y2();
+				args.xto = toNode.X() + 0.25 * (toNode.X2() - toNode.X());
+				args.yto = toNode.Y2();
 				break;
 			case "wsw":
-				args.xto = toNode.x();
-				args.yto = toNode.y() + 0.75 * (toNode.y2() - toNode.y());
+				args.xto = toNode.X();
+				args.yto = toNode.Y() + 0.75 * (toNode.Y2() - toNode.Y());
 				break;
 			case "wnw":
-				args.xto = toNode.x();
-				args.yto = toNode.y() + 0.25 * (toNode.y2() - toNode.y());
+				args.xto = toNode.X();
+				args.yto = toNode.Y() + 0.25 * (toNode.Y2() - toNode.Y());
 				break;
 			case "nnw":
-				args.xto = toNode.x() + 0.25 * (toNode.x2() - toNode.x());
-				args.yto = toNode.y();
+				args.xto = toNode.X() + 0.25 * (toNode.X2() - toNode.X());
+				args.yto = toNode.Y();
 				break;
 			case "nne":
-				args.xto = toNode.x() + 0.75 * (toNode.x2() - toNode.x());
-				args.yto = toNode.y();
+				args.xto = toNode.X() + 0.75 * (toNode.X2() - toNode.X());
+				args.yto = toNode.Y();
 				break;
 			case "ene":
-				args.xto = toNode.x2();
-				args.yto = toNode.y() + 0.25 * (toNode.y2() - toNode.y());
+				args.xto = toNode.X2();
+				args.yto = toNode.Y() + 0.25 * (toNode.Y2() - toNode.Y());
 				break;
 			default:
 				isToCenter = true;
@@ -195,9 +195,9 @@ let parseArrowArgs = function(fromNode, toNode, options) {
 		
 		if (isFromCenter || isToCenter) {
 			let x1, y1, x2, y2;
-			if (isFromCenter && isToCenter) {             x1 = fromNode.cx(); y1 = fromNode.cy(); x2 = toNode.cx(); y2 =toNode.cy(); }
-			else if (isFromCenter && !isToCenter) {       x1 = fromNode.cx(); y1 = fromNode.cy(); x2 = args.xto;    y2 = args.yto;   }
-			else { /* if (!isFromCenter && isToCenter) */ x1 = args.xfrom;    y1 = args.yfrom;    x2 = toNode.cx(); y2 =toNode.cy(); }
+			if (isFromCenter && isToCenter) {             x1 = fromNode.CX(); y1 = fromNode.CY(); x2 = toNode.CX(); y2 =toNode.CY(); }
+			else if (isFromCenter && !isToCenter) {       x1 = fromNode.CX(); y1 = fromNode.CY(); x2 = args.xto;    y2 = args.yto;   }
+			else { /* if (!isFromCenter && isToCenter) */ x1 = args.xfrom;    y1 = args.yfrom;    x2 = toNode.CX(); y2 =toNode.CY(); }
 			
 			let coeff = (y2 - y1) / (x2-x1),
 				toTheRight = (x2 > x1),
@@ -208,11 +208,11 @@ let parseArrowArgs = function(fromNode, toNode, options) {
 			args.xFromY = xFromY;
 	
 			if (isFromCenter) {
-				let xfromCandidate = (x2 > x1) ? fromNode.x2() : fromNode.x(),
-					yfromCandidate = (y2 > y1) ? fromNode.y2() : fromNode.y(),
+				let xfromCandidate = (x2 > x1) ? fromNode.X2() : fromNode.X(),
+					yfromCandidate = (y2 > y1) ? fromNode.Y2() : fromNode.Y(),
 					yMatchingToXCandidate = yFromX(xfromCandidate);
 					
-				if (yMatchingToXCandidate >= fromNode.y() && yMatchingToXCandidate <= fromNode.y2()) {
+				if (yMatchingToXCandidate >= fromNode.Y() && yMatchingToXCandidate <= fromNode.Y2()) {
 					args.xfrom = xfromCandidate;
 					args.yfrom = yMatchingToXCandidate;
 				}
@@ -224,11 +224,11 @@ let parseArrowArgs = function(fromNode, toNode, options) {
 			}
 
 			if (isToCenter) {
-				let xtoCandidate = (x2 > x1) ? toNode.x() : toNode.x2(),
-					ytoCandidate = (y2 > y1) ? toNode.y() : toNode.y2(),
+				let xtoCandidate = (x2 > x1) ? toNode.X() : toNode.X2(),
+					ytoCandidate = (y2 > y1) ? toNode.Y() : toNode.Y2(),
 					yMatchingToXCandidate = yFromX(xtoCandidate);
 					
-				if (yMatchingToXCandidate >= toNode.y() && yMatchingToXCandidate <= toNode.y2()) {
+				if (yMatchingToXCandidate >= toNode.Y() && yMatchingToXCandidate <= toNode.Y2()) {
 					args.xto = xtoCandidate;
 					args.yto = yMatchingToXCandidate;
 				}

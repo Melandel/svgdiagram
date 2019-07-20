@@ -10,14 +10,14 @@ SVG.Frame = SVG.invent({
 				maxChildFrameDepth = 0;
 			
 			for (let node of content.splice(1)) {
-				if (node.x() < x_min)
-					x_min = node.x();
-				if (node.x2() > x2_max)
-					x2_max = node.x2();
-				if (node.y() < y_min)
-					y_min = node.y();
-				if (node.y2() > y2_max)
-					y2_max = node.y2();
+				if (node.X() < x_min)
+					x_min = node.X();
+				if (node.X2() > x2_max)
+					x2_max = node.X2();
+				if (node.Y() < y_min)
+					y_min = node.Y();
+				if (node.Y2() > y2_max)
+					y2_max = node.Y2();
 				if (node instanceof SVG.Frame)
 					maxChildFrameDepth = Math.max(node.attr("depth"), maxChildFrameDepth);
 				this.add(node);
@@ -44,8 +44,8 @@ SVG.Frame = SVG.invent({
 				
 				this.id(titleText);
 				
-				background_x = Math.min(background_x, title.x() - hMargin);
-				background_x2 = Math.max(background_x2, title.x2() + hMargin);
+				background_x = Math.min(background_x, title.X() - hMargin);
+				background_x2 = Math.max(background_x2, title.X2() + hMargin);
 				background_width = background_x2 - background_x;
 
 				let background_y = background_y_without_title - title.height() - vMargin,
@@ -60,6 +60,10 @@ SVG.Frame = SVG.invent({
 				this.move(background_x, background_y);
 
 				this.each(function (i, children) {
+					if (!this.attr("X")) {
+						this.attr("X", this.x());
+						this.attr("Y", this.y());
+					}
 					this.dx(-1 * background_x).dy(-1 * background_y);
 				});
 
