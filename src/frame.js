@@ -26,8 +26,10 @@ SVG.Frame = SVG.invent({
 			let depth = Math.max(1, maxChildFrameDepth + 1);
 			this.attr("depth", Math.max(1, maxChildFrameDepth + 1));
 			
-			let hMargin = 10 + 10 * maxChildFrameDepth,
-				vMargin = 10 + 10 * maxChildFrameDepth,
+			let hMarginBase = 10,
+				hMargin = hMarginBase + 10 * maxChildFrameDepth,
+				vMarginBase = 10,
+				vMargin = vMarginBase + 10 * maxChildFrameDepth,
 				extraVMargin = 2,
 				underlineHeight = 3;
 				
@@ -35,7 +37,7 @@ SVG.Frame = SVG.invent({
 					background_x2 = x2_max + hMargin,
 					background_width = (background_x2 - background_x),
 					background_y_without_title = y_min - (vMargin + extraVMargin) - underlineHeight,
-					background_y2 = y2_max + vMargin;
+					background_y2 = y2_max + vMarginBase;
 
 				let titleText = capitalizeFirstLetter(content[0]);
 				let title = this.text(titleText).id(titleText + "_title")

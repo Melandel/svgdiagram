@@ -36,7 +36,7 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 			drawn =  svg.rnode(...args);
 		
 			if (window.isFirstNode) {
-				drawn.fill("#c1aba6");
+				drawn.fill("#ffbe0b");
 				window.isFirstNode = false;
 			}
 		}

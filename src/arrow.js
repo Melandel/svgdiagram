@@ -2,28 +2,33 @@
 		create: function (config) {
 			SVG.Nested.call(this);
 			
-			this.move(config.xfrom, config.yfrom);
+			let xTop = Math.min(config.xfrom, config.xto),
+				yLeft = Math.min(config.yfrom, config.yto),
+				xInThis = config.xfrom-xTop,
+				yInThis = config.yfrom-yLeft;
+				
+			this.move(xTop, yLeft);
 			
 			switch (config.type) {
 				case "simple":
 				default:
 					this.path(`
-						M ${0} ${0 - 1}
-						L ${0 + config.length - 5} ${0 - 1}
-						L ${0 + config.length - 10} ${0 - 1 -7}
-						L ${0 + config.length} ${0}
-						L ${0 + config.length - 10} ${0 + 1 +7}
-						L ${0 + config.length - 5} ${0 + 1}
-						L ${0} ${0 + 1}
+						M ${xInThis} ${yInThis - 1}
+						L ${xInThis + config.length - 5} ${yInThis - 1}
+						L ${xInThis + config.length - 10} ${yInThis - 1 -7}
+						L ${xInThis + config.length} ${yInThis}
+						L ${xInThis + config.length - 10} ${yInThis + 1 +7}
+						L ${xInThis + config.length - 5} ${yInThis + 1}
+						L ${xInThis} ${yInThis + 1}
 						Z
-					`).rotate(config.angle_degrees, 0, 0)
+					`).rotate(config.angle_degrees, xInThis, yInThis)
 					  .fill(config.color ||'#303030');
 					
 					if (config.caption) {
 						this.text(config.caption)
 							.setFontSize(0.8)
-							.cx(0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
-							.cy(0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
+							.cx(xInThis + 0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
+							.cy(yInThis + 0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
 							.fill(config.color ||'#303030');
 					}
 				break;

@@ -5942,28 +5942,33 @@ SVG.RNode = SVG.invent({
 		create: function (config) {
 			SVG.Nested.call(this);
 			
-			this.move(config.xfrom, config.yfrom);
+			let xTop = Math.min(config.xfrom, config.xto),
+				yLeft = Math.min(config.yfrom, config.yto),
+				xInThis = config.xfrom-xTop,
+				yInThis = config.yfrom-yLeft;
+				
+			this.move(xTop, yLeft);
 			
 			switch (config.type) {
 				case "simple":
 				default:
 					this.path(`
-						M ${0} ${0 - 1}
-						L ${0 + config.length - 5} ${0 - 1}
-						L ${0 + config.length - 10} ${0 - 1 -7}
-						L ${0 + config.length} ${0}
-						L ${0 + config.length - 10} ${0 + 1 +7}
-						L ${0 + config.length - 5} ${0 + 1}
-						L ${0} ${0 + 1}
+						M ${xInThis} ${yInThis - 1}
+						L ${xInThis + config.length - 5} ${yInThis - 1}
+						L ${xInThis + config.length - 10} ${yInThis - 1 -7}
+						L ${xInThis + config.length} ${yInThis}
+						L ${xInThis + config.length - 10} ${yInThis + 1 +7}
+						L ${xInThis + config.length - 5} ${yInThis + 1}
+						L ${xInThis} ${yInThis + 1}
 						Z
-					`).rotate(config.angle_degrees, 0, 0)
+					`).rotate(config.angle_degrees, xInThis, yInThis)
 					  .fill(config.color ||'#303030');
 					
 					if (config.caption) {
 						this.text(config.caption)
 							.setFontSize(0.8)
-							.cx(0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
-							.cy(0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
+							.cx(xInThis + 0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
+							.cy(yInThis + 0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
 							.fill(config.color ||'#303030');
 					}
 				break;
@@ -6227,8 +6232,10 @@ SVG.Frame = SVG.invent({
 			let depth = Math.max(1, maxChildFrameDepth + 1);
 			this.attr("depth", Math.max(1, maxChildFrameDepth + 1));
 			
-			let hMargin = 10 + 10 * maxChildFrameDepth,
-				vMargin = 10 + 10 * maxChildFrameDepth,
+			let hMarginBase = 10,
+				hMargin = hMarginBase + 10 * maxChildFrameDepth,
+				vMarginBase = 10,
+				vMargin = vMarginBase + 10 * maxChildFrameDepth,
 				extraVMargin = 2,
 				underlineHeight = 3;
 				
@@ -6236,7 +6243,7 @@ SVG.Frame = SVG.invent({
 					background_x2 = x2_max + hMargin,
 					background_width = (background_x2 - background_x),
 					background_y_without_title = y_min - (vMargin + extraVMargin) - underlineHeight,
-					background_y2 = y2_max + vMargin;
+					background_y2 = y2_max + vMarginBase;
 
 				let titleText = capitalizeFirstLetter(content[0]);
 				let title = this.text(titleText).id(titleText + "_title")
@@ -6262,8 +6269,6 @@ SVG.Frame = SVG.invent({
 
 				this.each(function (i, children) {
 					if (!this.attr("X")) {
-						if (this.id() == "API SMP-Olay")
-							debugger;
 						this.attr("X", this.x());
 						this.attr("Y", this.y());
 					}
@@ -6580,8 +6585,8 @@ SVG.extend(SVG.FX, {
 
 SVG.extend(SVG.Doc, {
 	initViewport: function(visibleBorderPxWhenAtMinimalZoom = 20) {
-		let X_AXIS = { trunk: this.rect(5, 1), tip: this.path('M5 0.5 L5 -2 L 8 0.5 L 5 3 Z'), caption: this.text('X').y(-20) },
-			Y_AXIS = { trunk: this.rect(1, 5), tip: this.path('M0.5 5 L-2 5 L 0.5 8 L 3 5 Z'), caption: this.text('Y').x(-12) };
+		// let X_AXIS = { trunk: this.rect(5, 1), tip: this.path('M5 0.5 L5 -2 L 8 0.5 L 5 3 Z'), caption: this.text('X').y(-20) },
+			// Y_AXIS = { trunk: this.rect(1, 5), tip: this.path('M0.5 5 L-2 5 L 0.5 8 L 3 5 Z'), caption: this.text('Y').x(-12) };
 			
 		let initialViewbox = this.bbox();
 			initialViewbox.x -= visibleBorderPxWhenAtMinimalZoom;
@@ -6644,7 +6649,7 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 			drawn =  svg.rnode(...args);
 		
 			if (window.isFirstNode) {
-				drawn.fill("#c1aba6");
+				drawn.fill("#ffbe0b");
 				window.isFirstNode = false;
 			}
 		}
