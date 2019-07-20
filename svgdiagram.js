@@ -5871,7 +5871,7 @@ SVG.RNode = SVG.invent({
 			
 			let nbCells = cells.length,
 				textNodeTitleSizeFont = parseInt(window.refFontSize),
-				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).setFontSize(0.9)),
+				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).setFontSize(0.9).fill('black')),
 				vMargin = 10;
 
 			let title = textNodes[0].setFontSize(1);
@@ -5903,7 +5903,7 @@ SVG.RNode = SVG.invent({
 			}
 			
 			let background = this.rect(backgroundWidth, backgroundHeight)
-				.fill("#F5E0B7")
+				.fill("#F5D8BD")
 				.id(titleText + "_background")
 				.stroke({ width: 1})
 				.back();
@@ -5949,14 +5949,14 @@ SVG.RNode = SVG.invent({
 						L ${0} ${0 + 1}
 						Z
 					`).rotate(config.angle_degrees, 0, 0)
-					  .fill(config.color ||'SlateBlue');
+					  .fill(config.color ||'#4F5F65');
 					
 					if (config.caption) {
 						this.text(config.caption)
 							.setFontSize(0.8)
 							.cx(0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
 							.cy(0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
-							.fill('SlateBlue');
+							.fill(config.color ||'#4F5F65');
 					}
 				break;
 			}
@@ -6267,35 +6267,36 @@ SVG.Frame = SVG.invent({
 					textColor = "black";
 				switch (depth) {
 					case 1:
-						backgroundColor = "#D6BA73";
+						backgroundColor = "#ADD9E7";
 						break;
 					case 2:
-						backgroundColor = "#8BBF9F";
+						// backgroundColor = "#B5DCE8";
+						backgroundColor = "#eaf4f4";
 						break;
 					case 3:
-						backgroundColor = "#857E7B";
+						// backgroundColor = "#BDDFEA";
+						backgroundColor = "#f2f6d0";
 						break;
 					case 4:
-						backgroundColor = "#59344F";
-						textColor = "white";
+						backgroundColor = "#e4be9e";
 						break;
 					case 5:
-						backgroundColor = "#011936";
-						textColor = "white";
+						backgroundColor = "#ffc09f";
 						break;
 					case 6:
-						backgroundColor = "#f4fffd";
+						backgroundColor = "#fcde9c";
 						break;
 					case 7:
-						backgroundColor = "#f9dc5c";
+						backgroundColor = "#bbbe64";
 						break;
 					case 8:
-						backgroundColor = "#52414c";
-						textColor = "white";
+						backgroundColor = "#dff2d8";
+						break;
+					case 9:
+						backgroundColor = "#cfe8ef";
 						break;
 					default:
-						backgroundColor = "#596157";
-						textColor = "white";
+						backgroundColor = "#a1d2ce";
 						break;
 				}
 				background.fill(backgroundColor);
@@ -6633,7 +6634,7 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 			drawn =  svg.rnode(...args);
 		
 			if (window.isFirstNode) {
-				drawn.fill("#ef3e36");
+				drawn.fill("#c1aba6");
 				window.isFirstNode = false;
 			}
 		}

@@ -8,7 +8,7 @@ SVG.RNode = SVG.invent({
 			
 			let nbCells = cells.length,
 				textNodeTitleSizeFont = parseInt(window.refFontSize),
-				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).setFontSize(0.9)),
+				textNodes = cells.map((x) => this.text(Array.isArray(x) ? x.join('\n') : x).setFontSize(0.9).fill('black')),
 				vMargin = 10;
 
 			let title = textNodes[0].setFontSize(1);
@@ -40,7 +40,7 @@ SVG.RNode = SVG.invent({
 			}
 			
 			let background = this.rect(backgroundWidth, backgroundHeight)
-				.fill("#F5E0B7")
+				.fill("#F5D8BD")
 				.id(titleText + "_background")
 				.stroke({ width: 1})
 				.back();

@@ -74,35 +74,36 @@ SVG.Frame = SVG.invent({
 					textColor = "black";
 				switch (depth) {
 					case 1:
-						backgroundColor = "#D6BA73";
+						backgroundColor = "#ADD9E7";
 						break;
 					case 2:
-						backgroundColor = "#8BBF9F";
+						// backgroundColor = "#B5DCE8";
+						backgroundColor = "#eaf4f4";
 						break;
 					case 3:
-						backgroundColor = "#857E7B";
+						// backgroundColor = "#BDDFEA";
+						backgroundColor = "#f2f6d0";
 						break;
 					case 4:
-						backgroundColor = "#59344F";
-						textColor = "white";
+						backgroundColor = "#e4be9e";
 						break;
 					case 5:
-						backgroundColor = "#011936";
-						textColor = "white";
+						backgroundColor = "#ffc09f";
 						break;
 					case 6:
-						backgroundColor = "#f4fffd";
+						backgroundColor = "#fcde9c";
 						break;
 					case 7:
-						backgroundColor = "#f9dc5c";
+						backgroundColor = "#bbbe64";
 						break;
 					case 8:
-						backgroundColor = "#52414c";
-						textColor = "white";
+						backgroundColor = "#dff2d8";
+						break;
+					case 9:
+						backgroundColor = "#cfe8ef";
 						break;
 					default:
-						backgroundColor = "#596157";
-						textColor = "white";
+						backgroundColor = "#a1d2ce";
 						break;
 				}
 				background.fill(backgroundColor);
