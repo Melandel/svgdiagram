@@ -5953,13 +5953,13 @@ SVG.RNode = SVG.invent({
 				case "simple":
 				default:
 					this.path(`
-						M ${xInThis} ${yInThis - 1}
-						L ${xInThis + config.length - 5} ${yInThis - 1}
-						L ${xInThis + config.length - 10} ${yInThis - 1 -7}
+						M ${xInThis} ${yInThis - 0.5}
+						L ${xInThis + config.length - 5} ${yInThis - 0.5}
+						L ${xInThis + config.length - 10} ${yInThis - 0.5 -5}
 						L ${xInThis + config.length} ${yInThis}
-						L ${xInThis + config.length - 10} ${yInThis + 1 +7}
-						L ${xInThis + config.length - 5} ${yInThis + 1}
-						L ${xInThis} ${yInThis + 1}
+						L ${xInThis + config.length - 10} ${yInThis + 0.5 +5}
+						L ${xInThis + config.length - 5} ${yInThis + 0.5}
+						L ${xInThis} ${yInThis + 0.5}
 						Z
 					`).rotate(config.angle_degrees, xInThis, yInThis)
 					  .fill(config.color ||'#303030');
