@@ -129,6 +129,55 @@ SVG.extend(SVG.Element, {
 	e:     function (node, distance) { return this._east(parseRelativePositionArgs(this, node,  distance)); },
 	west:  function (node, distance) { return this._west(parseRelativePositionArgs(this, node,  distance)); },
 	w:     function (node, distance) { return this._west(parseRelativePositionArgs(this, node,  distance)); },
+	
+	_alignedOnX: function (node) {return this.x(node.X())},
+	_alignedOnX2: function (node) {return this.x2(node.X2())},
+	_alignedOnCx: function (node) {return this.cx(node.CX())},
+	_alignedOnY: function (node) {return this.y(node.Y())},
+	_alignedOnY2: function (node) {return this.y2(node.Y2())},
+	_alignedOnCy: function (node) {return this.cy(node.CY())},
+	
+	alignedOnX:  function (node) {return this._alignedOnX(node)},
+	alignedOnX2: function (node) {return this._alignedOnX2(node)},
+	alignedOnCx: function (node) {return this._alignedOnCx(node)},
+	ax:  function (node) {return this._alignedOnX(node)},
+	ax2: function (node) {return this._alignedOnX2(node)},
+	acx: function (node) {return this._alignedOnCx(node)},
+	alignedOnY:  function (node) {return this._alignedOnY(node)},
+	alignedOnY2: function (node) {return this._alignedOnY2(node)},
+	alignedOnCy: function (node) {return this._alignedOnCy(node)},
+	ay:  function (node) {return  this._alignedOnY(node)},
+	ay2: function (node) {return this._alignedOnY2(node)},
+	acy: function (node) {return this._alignedOnCy(node)},
+	
+	_southAlignedOnX:  function(relativePositionArgs) { return this.x(relativePositionArgs.node.X())  .y(relativePositionArgs.node.Y2() + relativePositionArgs.distance); },
+	_southAlignedOnX2: function(relativePositionArgs) { return this.x2(relativePositionArgs.node.X2()).y(relativePositionArgs.node.Y2() + relativePositionArgs.distance); },
+	_northAlignedOnX:  function(relativePositionArgs) { return this.x(relativePositionArgs.node.X())  .y2(relativePositionArgs.node.Y() - relativePositionArgs.distance); },
+	_northAlignedOnX2: function(relativePositionArgs) { return this.x2(relativePositionArgs.node.X2()).y2(relativePositionArgs.node.Y() - relativePositionArgs.distance); },
+	_eastAlignedOnY:   function(relativePositionArgs) { return this.x(relativePositionArgs.node.X2() + relativePositionArgs.distance).y(relativePositionArgs.node.Y()); },
+	_eastAlignedOnY2:  function(relativePositionArgs) { return this.x(relativePositionArgs.node.X2() + relativePositionArgs.distance).y2(relativePositionArgs.node.Y2()); },
+	_westAlignedOnY:   function(relativePositionArgs) { return this.x2(relativePositionArgs.node.X() - relativePositionArgs.distance).y(relativePositionArgs.node.Y()); },
+	_westAlignedOnY2:  function(relativePositionArgs) { return this.x2(relativePositionArgs.node.X() - relativePositionArgs.distance).y2(relativePositionArgs.node.Y2()); },
+	
+	southAlignedOnX: function (node, distance) { return this._southAlignedOnX(parseRelativePositionArgs(this, node, distance)); },
+	southAlignedOnX2: function (node, distance) { return this._southAlignedOnX2(parseRelativePositionArgs(this, node, distance)); },
+	sax: function (node, distance) { return this._southAlignedOnX(parseRelativePositionArgs(this, node, distance)); },
+	sax2: function (node, distance) { return this._southAlignedOnX2(parseRelativePositionArgs(this, node, distance)); },
+	
+	northAlignedOnX: function (node, distance) { return this._northAlignedOnX(parseRelativePositionArgs(this, node, distance)); },
+	northAlignedOnX2: function (node, distance) { return this._northAlignedOnX2(parseRelativePositionArgs(this, node, distance)); },
+	nax: function (node, distance) { return this._northAlignedOnX(parseRelativePositionArgs(this, node, distance)); },
+	nax2: function (node, distance) { return this._northAlignedOnX2(parseRelativePositionArgs(this, node, distance)); },
+	
+	eastAlignedOnY:  function (node, distance) { return this._eastAlignedOnY(parseRelativePositionArgs(this, node,  distance)); },
+	eastAlignedOnY2:  function (node, distance) { return this._eastAlignedOnY2(parseRelativePositionArgs(this, node,  distance)); },
+	eay:  function (node, distance) { return this._eastAlignedOnY(parseRelativePositionArgs(this, node,  distance)); },
+	eay2:  function (node, distance) { return this._eastAlignedOnY2(parseRelativePositionArgs(this, node,  distance)); },
+	
+	westAlignedOnY:  function (node, distance) { return this._westAlignedOnY(parseRelativePositionArgs(this, node,  distance)); },
+	westAlignedOnY2:  function (node, distance) { return this._westAlignedOnY2(parseRelativePositionArgs(this, node,  distance)); },
+	way:  function (node, distance) { return this._westAlignedOnY(parseRelativePositionArgs(this, node,  distance)); },
+	way2:  function (node, distance) { return this._westAlignedOnY2(parseRelativePositionArgs(this, node,  distance)); },
 
 	_northEast: function(relativePositionArgs) { return this.x(relativePositionArgs.node.X2() + relativePositionArgs.distance).y2(relativePositionArgs.node.Y() - relativePositionArgs.distance); },
 	_northWest: function(relativePositionArgs) { return this.x2(relativePositionArgs.node.X() - relativePositionArgs.distance).y2(relativePositionArgs.node.Y() - relativePositionArgs.distance); },
@@ -174,80 +223,98 @@ SVG.extend(SVG.Nested, {
 				chain: "followThrough"
 			},
 			isFirstArgANode = (args[0] instanceof SVG.Nested),
-			chainConfigOverride = isFirstArgANode ? {}
-												  : args[0];
-		let chainConfig = {};
-		for (let prop in defaultChainConfig)
-			chainConfig[prop] = defaultChainConfig[prop];
-		for (let prop in chainConfigOverride)
-			chainConfig[prop] = chainConfigOverride[prop];
+			chainConfig = isFirstArgANode ? {} : args[0];		
 		
+		let i = isFirstArgANode ? 0 : 1,
+			linkFrom = this,
+			linkTo,
+			doc = this.doc();
+		while (i < args.length) {
+			linkTo = args[i];
+			let nextArg = args[i+1],
+				isNextArgANode = (nextArg instanceof SVG.Nested),
+				linkConfigOverride;
+			
+			if (!nextArg || isNextArgANode)
+				linkConfigOverride = {};
+			else if (typeof nextArg == "string")
+				linkConfigOverride = { caption: nextArg };
+			else
+				linkConfigOverride = nextArg;
+			
+			let linkConfig = override(chainConfig, linkConfigOverride);
+			
+			doc.arrow(linkFrom, linkTo, linkConfig);
+			
+			linkFrom = linkTo;
+			
+			i += (isNextArgANode ? 1 : 2);
+		}
+		
+		return this;
+	},
+	oneToMany: function (...args) {
+		let defaultChainConfig = {
+				chain: "followThrough"
+			},
+			isFirstArgANode = (args[0] instanceof SVG.Nested),
+			chainConfig = isFirstArgANode ? {} : args[0];		
+		
+		let i = isFirstArgANode ? 0 : 1,
+			linkFrom = this,
+			linkTo,
+			doc = this.doc();
+		while (i < args.length) {
+			linkTo = args[i];
+			let nextArg = args[i+1],
+				isNextArgANode = (nextArg instanceof SVG.Nested),
+				linkConfigOverride;
+			
+			if (!nextArg || isNextArgANode)
+				linkConfigOverride = {};
+			else if (typeof nextArg == "string")
+				linkConfigOverride = { caption: nextArg };
+			else
+				linkConfigOverride = nextArg;
+			
+			let linkConfig = override(chainConfig, linkConfigOverride);
+			
+			doc.arrow(linkFrom, linkTo, linkConfig);
+			
+			i += (isNextArgANode ? 1 : 2);
+		}
+		return this;
+	},
+	manyToOne: function (...args) {
+		let defaultChainConfig = {
+				chain: "followThrough"
+			},
+			isFirstArgANode = (args[0] instanceof SVG.Nested),
+			chainConfig = isFirstArgANode ? {} : args[0];		
 		
 		let i = isFirstArgANode ? 0 : 1,
 			linkFrom,
-			linkTo,
+			linkTo = this,
 			doc = this.doc();
-		switch (chainConfig.chain) {
-			case "manyToOne":
-				linkTo = this;
-				while (i < args.length) {
-					linkFrom = args[i];
-					let nextArg = args[i+1],
-						isNextArgANode = (nextArg instanceof SVG.Nested),
-						linkConfigOverride;
-					
-					if (!nextArg || isNextArgANode)
-						linkConfigOverride = {};
-					else if (typeof nextArg == "string")
-						linkConfigOverride = { caption: nextArg };
-					else
-						linkConfigOverride = nextArg;
-					
-					let linkConfig = {};
-					for (let prop in chainConfig)
-						linkConfig[prop] = chainConfig[prop];
-					for (let prop in linkConfigOverride)
-						linkConfig[prop] = linkConfigOverride[prop];
-					
-					doc.arrow(linkFrom, linkTo, linkConfig);
-					
-					i += (isNextArgANode ? 1 : 2);
-				}
-				break;
-				
-			case "oneToMany":
-			case "followThrough":
-			default:
-				linkFrom = this;
-				while (i < args.length) {
-					linkTo = args[i];
-					let nextArg = args[i+1],
-						isNextArgANode = (nextArg instanceof SVG.Nested),
-						linkConfigOverride;
-					
-					if (!nextArg || isNextArgANode)
-						linkConfigOverride = {};
-					else if (typeof nextArg == "string")
-						linkConfigOverride = { caption: nextArg };
-					else
-						linkConfigOverride = nextArg;
-					
-					let linkConfig = {};
-					for (let prop in chainConfig)
-						linkConfig[prop] = chainConfig[prop];
-					for (let prop in linkConfigOverride)
-						linkConfig[prop] = linkConfigOverride[prop];
-					
-					doc.arrow(linkFrom, linkTo, linkConfig);
-					
-					if (chainConfig.chain == "followThrough")
-						linkFrom = linkTo;
-					
-					i += (isNextArgANode ? 1 : 2);
-				}
-				break;
+		while (i < args.length) {
+			linkFrom = args[i];
+			let nextArg = args[i+1],
+				isNextArgANode = (nextArg instanceof SVG.Nested),
+				linkConfigOverride;
+			
+			if (!nextArg || isNextArgANode)
+				linkConfigOverride = {};
+			else if (typeof nextArg == "string")
+				linkConfigOverride = { caption: nextArg };
+			else
+				linkConfigOverride = nextArg;
+			
+			let linkConfig = override(chainConfig, linkConfigOverride);
+			
+			doc.arrow(linkFrom, linkTo, linkConfig);
+			
+			i += (isNextArgANode ? 1 : 2);
 		}
-		
 		return this;
 	}
 })

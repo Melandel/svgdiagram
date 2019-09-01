@@ -23,8 +23,7 @@
 			south2 = draw("south2", ".south(200) | .s(200)").south(helloWorld, 200),
 			west2 = draw("west2", ".west(200)", ".w(200)").west(helloWorld, 200);
 			
-		helloWorld.chain(
-			{chain: "oneToMany"},
+		helloWorld.oneToMany(
 			north.chain(north2),
 			east.chain(east2),
 			south.chain(south2),
@@ -44,8 +43,7 @@
 			southEast2 = draw("southEast2", ".southEast(200) | .se(200)").southEast(helloWorld, 200),
 			southWest2 = draw("southWest2", ".southWest(200) | .sw(200)").southWest(helloWorld, 200);
 			
-		helloWorld.chain(
-			{chain: "oneToMany"},
+		helloWorld.oneToMany(
 			northEast.chain(northEast2),
 			northWest.chain(northWest2),
 			southEast.chain(southEast2),
@@ -100,8 +98,7 @@
 			polarEast = draw("ϱ: 200\nϑ: 0°", "polar(200, 0)", "p(200, 0)").polar(helloWorld, 0, 200),
 			polarSouthWest = draw("ϱ: 200\nϑ: 135°", "polar(200, 135)", "p(200, 135)").polar(helloWorld, 135, 200),
 			polarNorthWest = draw("ϱ: 200\nϑ: -135°", "polar(200, -135)", "p(200, -135)").polar(helloWorld, -135, 200);
-		helloWorld.chain(
-			{chain: "oneToMany"},
+		helloWorld.oneToMany(
 			polarNorth,
 			polarEast,
 			polarSouthWest,
@@ -128,8 +125,7 @@
 		let hello = draw("Hello").move(10,60).fill("lightgreen"),
 			exclamationMark = draw("!").e(300),
 			world =  draw("world", ".between(hello, exclamationMark)", ".between(hello, exclamationMark, 1/2)", ".b(hello, exclamationMark)").between(hello, exclamationMark).fill("orange");
-		world.chain(
-			{chain: "manyToOne"},
+		world.oneToMany(
 			hello,
 			exclamationMark
 		);
@@ -137,8 +133,7 @@
 		let i = draw("I").x2(hello.x2()).y(200),
 			svgdiagram = draw("svgdiagram").x(exclamationMark.x()).cy(i.cy()),
 			am =  draw("am", ".between(i, svgdiagram, 0.4)", ".b(i, svgdiagram, 0.4)").between(i, svgdiagram, 40/100).fill("orange");
-		am.chain(
-			{chain: "manyToOne"},
+		am.oneToMany(
 			i,
 			svgdiagram
 		);
@@ -146,8 +141,7 @@
 		let nice = draw("Nice").move(500, 10),
 			you = draw("you").se(150),
 			toMeet =  draw("to meet", ".between(nice, you)", ".b(nice, you)").between(nice, you).fill("orange");
-		toMeet.chain(
-			{chain: "manyToOne"},
+		toMeet.oneToMany(
 			nice,
 			you
 		);
@@ -156,13 +150,11 @@
 			X2 = draw("X2").se(150),
 			x12 =  draw("x12", ".bx(X1, X2)").bx(X1, X2).fill("orange"),
 			x21 =  draw("x21", ".bx(X2, X1)").bx(X2, X1).fill("yellow");
-		x12.chain(
-			{chain: "manyToOne"},
+		x12.oneToMany(
 			X1,
 			X2
 		);
-		x21.chain(
-			{chain: "manyToOne"},
+		x21.oneToMany(
 			X1,
 			X2
 		);
@@ -171,13 +163,11 @@
 			Y2 = draw("Y2").se(150),
 			y12 =  draw("y12", ".by(Y1, Y2)").by(Y1, Y2).fill("orange"),
 			y21 =  draw("y21", ".by(Y2, Y1)").by(Y2, Y1).fill("yellow");
-		y12.chain(
-			{chain: "manyToOne"},
+		y12.oneToMany(
 			Y1,
 			Y2
 		);
-		y21.chain(
-			{chain: "manyToOne"},
+		y21.manyToOne(
 			Y1,
 			Y2
 		);
@@ -192,27 +182,39 @@
 				D = draw("D").e(),
 					E = draw("E").e(),
 						F = draw("F").ne(E, 25),
-						G = draw("G").se(E, 25);
-		A.chain(
-			{color: "red", chain: "oneToMany"},
+						G = draw("G").se(E, 25),
+			J = draw("J").e(I);
+			
+		A.oneToMany(
+			{color: "red"},
 			
 			B.chain(
 				H,
 				{color: "blue"},
 				I,
+				{type: "dash"}
 			),
 			"A to B",
 			C.chain(
 				{color: "purple"},
 				D,
-				E.chain(
-					{chain: "oneToMany"},
+				{to: "nw"},
+				E.oneToMany(
 					F,
 					G, 
-					{caption: "E to G (green)", color: "lightgreen"}
+					{caption: "E to G (green)", color: "green", type: "dash"}
 				),
+				{from: "ne", to:"sw"}
 			),
-			"A to C",
+			"A to C"
+		);
+		
+		J.manyToOne(
+			I,
+			{to: "sw"},
+			F,
+			{to: "se"},
+			G
 		);
 	});
 	

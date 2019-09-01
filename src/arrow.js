@@ -10,6 +10,31 @@
 			this.move(xTop, yLeft);
 			
 			switch (config.type) {
+				case "dash":
+					this.path(`
+						M ${xInThis} ${yInThis}
+						L ${xInThis + config.length} ${yInThis}
+					`).rotate(config.angle_degrees, xInThis, yInThis)
+					  .stroke(config.color ||'#303030')
+					  .fill("none")
+					  .attr({"stroke-miterlimit": 50, "stroke-dasharray": "3 3"});
+					  
+					this.path(`
+						M ${xInThis + config.length - 10} ${yInThis - 0.5 -5}
+						L ${xInThis + config.length} ${yInThis}
+						L ${xInThis + config.length - 10} ${yInThis + 0.5 +5}
+						Z
+					`).rotate(config.angle_degrees, xInThis, yInThis)
+					  .fill(config.color ||'#303030');
+					  
+					if (config.caption) {
+						this.text(config.caption)
+							.setFontSize(0.8)
+							.cx(xInThis + 0.5 * (config.xto - config.xfrom)  + 12 * Math.cos(config.angle_radians - 0.5 * Math.PI))
+							.cy(yInThis + 0.5 * (config.yto - config.yfrom)  + 12 * Math.sin(config.angle_radians - 0.5 * Math.PI))
+							.fill(config.color ||'#303030');
+					}
+				break;
 				case "simple":
 				default:
 					this.path(`

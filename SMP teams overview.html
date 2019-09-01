@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8">
+		<title>SvgDiagram DIAGRAM</title>
+		<!-- <script type="text/javascript" src='https://melandel.github.io/svgdiagram/svgdiagram.js'></script> -->
+		<script type="text/javascript" src='svgdiagram.js'></script>
+	</head>
+	<body style="overflow:hidden">
+		<div id="svgcontainer" style="border:10px chocolate solid; height:calc(100vh - 36px - 10px - 10px - 1px); width:calc((100vw - 20px) - 10px - 10px);"></div>
+	</body>
+</html>
+<script>
+drawDiagram("svgcontainer",  "SMP: Supplier Management Platform", function (draw) {
+	let offlineBookingTools = draw("Offline Booking Tools"),
+		
+		smpOlay = draw("API SMP-Olay").e(),
+		smpHotels = draw("API SMP-Hotels").se(200),
+		smpAir = draw("API SMP-Air").ne(smpOlay, 200),
+		smpSoc = draw("SOC: Supply Optimization Console").b(smpHotels, smpAir).dx(100),
+		smpConnector = draw("API SMP-Connector").e(smpSoc, 50),
+		smpCore = draw("SMP", smpHotels, smpAir, smpConnector, smpSoc),
+		smpExt = draw("'SMP'", smpCore, smpOlay),
+		
+		gds = draw("GDS Suppliers").e(smpConnector, 300),
+		crs = draw("CRS Suppliers").n(),
+		prices = draw("negociated prices Suppliers").s(gds),
+		propertySuppliers = draw("Property Suppliers", crs, gds),
+		otherSuppliers = draw("Other suppliers", prices)
+		suppliers = draw("Data Suppliers", propertySuppliers, otherSuppliers);
+	
+	offlineBookingTools.oneToMany(
+		{from:"e"},
+		smpOlay.oneToMany(
+			{from:"e"},
+			smpAir,
+			smpHotels,
+		),
+		smpAir,
+		smpHotels,
+	);
+	
+	smpConnector.manyToOne(
+		smpAir,
+		smpHotels,
+	).oneToMany(
+		{to:"w"},
+		crs,
+		gds,
+		prices,
+	);
+	
+	smpSoc.oneToMany(
+		{type: "dash"},
+		smpAir,
+		"(optimizes)",
+		smpHotels,
+		"(optimizes)"
+	);
+	
+});
+</script>
