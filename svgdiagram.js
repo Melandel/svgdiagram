@@ -6017,6 +6017,7 @@ SVG.RNode = SVG.invent({
 
 	SVG.Arrow = SVG.invent({
 		create: function (config) {
+			let that = this;
 			SVG.Nested.call(this);
 			
 			let xTop = Math.min(config.xfrom, config.xto),
@@ -6052,6 +6053,65 @@ SVG.RNode = SVG.invent({
 							.fill(config.color ||'#303030');
 					}
 				break;
+				
+				case "backAndForth":
+					//forth
+					let yInThisLeft = yInThis - 10;
+					this.path(`
+						M ${xInThis} ${yInThisLeft - 0.5}
+						L ${xInThis + config.length - 5} ${yInThisLeft - 0.5}
+						L ${xInThis + config.length - 10} ${yInThisLeft - 0.5 -5}
+						L ${xInThis + config.length} ${yInThisLeft}
+						L ${xInThis + config.length - 10} ${yInThisLeft + 0.5 +5}
+						L ${xInThis + config.length - 5} ${yInThisLeft + 0.5}
+						L ${xInThis} ${yInThisLeft + 0.5}
+						Z
+					`).rotate(config.angle_degrees, xInThis, yInThis)
+					  .fill(config.color ||'#303030');
+					
+					//back
+					let yInThisRight = yInThis + 10;
+					this.path(`
+						M ${xInThis} ${yInThisRight}
+						L ${xInThis + config.length} ${yInThisRight}
+					`).rotate(config.angle_degrees, xInThis, yInThis)
+					  .stroke(config.color ||'#303030')
+					  .fill("none")
+					  .attr({"stroke-miterlimit": 50, "stroke-dasharray": "3 3"});
+
+					this.path(`
+						M ${xInThis + 5} ${yInThisRight - 0.5}
+						L ${xInThis + 10} ${yInThisRight - 0.5 -5}
+						L ${xInThis} ${yInThisRight}
+						L ${xInThis + 10} ${yInThisRight + 0.5 +5}
+						L ${xInThis + 5} ${yInThisRight + 0.5}
+						Z
+					`).rotate(config.angle_degrees, xInThis, yInThis)
+					  .fill(config.color ||'#303030');
+					 
+					if (config.caption) {
+						let captions = config.caption.split("|"),
+							cx1 = xInThis + 0.5 * (config.xto - config.xfrom)  + 25 * Math.cos(config.angle_radians - 0.5 * Math.PI),
+							cy1 = yInThisLeft + 0.5 * (config.yto - config.yfrom)  + 25 * Math.sin(config.angle_radians - 0.5 * Math.PI);
+						this.text(captions[0])
+							.setFontSize(0.8)
+							.cx(cx1)
+							.cy(cy1)
+							.fill(config.color ||'#303030');
+						
+						if (captions.length > 1) {
+							let dist = 20,
+								cx2 = xInThis + 0.5 * (config.xto - config.xfrom)  + 25 * Math.cos(config.angle_radians + 0.5 * Math.PI),
+								cy2 = yInThisRight + 0.5 * (config.yto - config.yfrom)  + 25 * Math.sin(config.angle_radians + 0.5 * Math.PI);
+							this.text(captions[1])
+								.setFontSize(0.8)
+								.cx((cx2 > cx1) ? Math.max(cx2, cx1 + dist) : Math.min(cx2, cx1 - dist))
+								.cy((cy2 > cy1) ? Math.max(cy2, cy1 + dist) : Math.min(cy2, cy1 - dist))
+								.fill(config.color ||'#303030');
+						}
+					}
+				break;
+				
 				case "simple":
 				default:
 					this.path(`
@@ -6090,13 +6150,17 @@ let parseArrowArgs = function(fromNode, toNode, options) {
 	let args = {};
 	
 	if(typeof options === 'string') {
-		args.type = "simple";
 		args.caption = options;
+		args.type = args.caption.includes("|") ? "backAndForth" : "simple";
 	}
 	else {
-		options.type = options.type || "simple";
 		for (let prop in options)
 			args[prop] = options[prop];
+		
+		if (options.caption && options.caption.includes("|"))
+			args.type = "backAndForth";
+		else
+			args.type = options.type || "simple";
 		
 		let isFromCenter = false;
 		switch (options.from) {
