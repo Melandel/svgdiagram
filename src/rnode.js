@@ -53,6 +53,11 @@ SVG.RNode = SVG.invent({
 			fill: function (arg) {
 				this.background.fill(arg);
 				return this;
+			},
+			link: function(url) {
+				this.node.style.cursor = "pointer";
+				this.node.addEventListener("click", () => window.open(url, "_blank"));
+				return this;
 			}
 		},
 		construct: {

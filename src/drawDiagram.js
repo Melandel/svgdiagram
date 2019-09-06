@@ -28,9 +28,20 @@ let drawDiagram = function drawDiagram (domContainerID, title, drawContent) {
 		return drawn;
 	};
 	
-	drawContent(drawingTool);
+	let options = {
+		shouldMatchParentSize: false,
+		enablePanZoom: true
+	};
+	drawContent(drawingTool, options);
 	svg.background(capitalizeFirstLetter(title), ...svg.children().filter(x => x.type !== "defs"));
-	svg.initViewport();
+	svg.initViewport(options.enablePanZoom);
+	
+	if(!options.shouldMatchParentSize) {
+		let bbox = svg.bbox();
+		
+		svg.size(bbox.width, bbox.height);
+	}
+	// By default, SVG has width="100%" and height="100%"
 	
 	return svg;
 }
